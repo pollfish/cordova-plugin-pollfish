@@ -301,6 +301,6 @@ pollfishplugin.setAttributesMap(userAttributes);
 
 ## More Info
 
-For more information on setting up Cordova see [the documentation](http://cordova.apache.org/docs/en/4.0.0/guide_cli_index.md.html#The%20Command-Line%20Interface)
+For more information on setting up Cordova see [the documentation](http://cordova.apache.org/docs/en/latest/guide/cli/index.html)
 
 For more info about Pollfish please check [Pollfish Website](http://www.pollfish.com)
