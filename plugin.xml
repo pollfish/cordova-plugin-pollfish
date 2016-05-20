@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
     id="com.pollfish.cordova"
-    version="0.0.1">
+    version="0.0.2">
     
     
     <name>PollfishPlugin</name>
@@ -59,6 +59,7 @@
         <framework src="AdSupport.framework" />
         <framework src="CoreGraphics.framework" />
         <framework src="CoreTelephony.framework" />
+        <framework src="SystemConfiguration.framework" />
         
         
         <header-file src="src/ios/PollfishPlugin.h" target-dir="PollfishPlugin"/>
