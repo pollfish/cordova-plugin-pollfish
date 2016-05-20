@@ -9,7 +9,7 @@ Pollfish is a mobile monetization platform delivering surveys instead of ads thr
 ## Prerequisites
 
 *	Android 10+ using Google Play Services
-*	iOS version 6.0+
+*	iOS version 7.0+
 *	Apache Cordova v3.0.4+
 
 ## Quick Guide
@@ -21,7 +21,7 @@ Pollfish is a mobile monetization platform delivering surveys instead of ads thr
 
 
 
-![alt tag](https://www.pollfish.com/img/rocketMobile.png)
+![alt tag](https://www.pollfish.com/homeassets/images/rocketMobile.png)
 
 ## Steps Analytically
 
