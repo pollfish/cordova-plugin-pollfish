@@ -1,0 +1,27 @@
+{
+    "version": "0.0.3",
+    "name": "com.pollfish.cordova",
+    "cordova_name": "PollfishPlugin",
+    "description": "Pollfish Cordova/PhoneGap plugin",
+    "keywords": [
+        "pollfish",
+        "cordova",
+        "phonegap",
+        "mobile",
+        "surveys",
+        "monetization",
+        "money",
+        "sdk",
+        "plugin"
+    ],
+    "platforms": [
+        "android",
+        "ios"
+    ],
+    "engines": [
+        {
+            "name": "cordova",
+            "version": ">=3.4.0"
+        }
+    ]
+}

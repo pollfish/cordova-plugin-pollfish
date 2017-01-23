@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
+    id="com.pollfish.cordova"
+    version="0.0.3">
+    
+    
+    <name>PollfishPlugin</name>
+    <description>Pollfish Cordova/PhoneGap plugin</description>
+    <author>Pollfish Inc.</author>
+    <keywords>pollfish,cordova,phonegap,mobile,surveys,monetization,money,sdk,plugin</keywords>
+ 
+    <engines>
+        <engine name="cordova" version=">=3.4.0"/>
+    </engines>
+    
+    <asset src="www/pollfishplugin.js" target="js/pollfishplugin.js"/>
+    
+    <js-module src="www/pollfishplugin.js" name="pollfishplugin">
+        <clobbers target="pollfishplugin" />
+    </js-module>
+    
+    <!-- android -->
+    
+    <platform name="android">
+        
+        <config-file target="res/xml/config.xml" parent="/*">
+            
+            <feature name="PollfishPlugin">
+                <param name="android-package" value="com.pollfish.cordova.PollfishPlugin"/>
+            </feature>
+            
+        </config-file>
+        
+        
+        <framework src="com.google.android.gms:play-services-base:9.8.0" />
+        
+        <source-file src="src/android/libs/pollfish-googleplay-4.3.1.jar" target-dir="libs"/>
+        <source-file src="src/android/PollfishPlugin.java" target-dir="src/com/pollfish/cordova" />
+        
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+            <uses-permission android:name="android.permission.INTERNET" />
+        </config-file>
+        
+    </platform>
+    
+    <!-- ios -->
+    
+    <platform name="ios">
+        
+        <config-file target="config.xml" parent="/widget">
+            <feature name="PollfishPlugin">
+                <param name="ios-package" value="PollfishPlugin" />
+            </feature>
+        </config-file>
+        
+        
+        <source-file src="src/ios/pollfish.framework" custom="true" />
+        
+        <framework src="AdSupport.framework" />
+        <framework src="CoreGraphics.framework" />
+        <framework src="CoreTelephony.framework" />
+        <framework src="SystemConfiguration.framework" />
+        
+        
+        <header-file src="src/ios/PollfishPlugin.h" target-dir="PollfishPlugin"/>
+        <source-file src="src/ios/PollfishPlugin.m" target-dir="PollfishPlugin"/>
+        
+    </platform>
+    
+    
+</plugin>
