@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
     id="com.pollfish.cordova"
-    version="0.0.1">
+    version="0.0.4">
     
     
     <name>PollfishPlugin</name>
@@ -30,10 +30,11 @@
             </feature>
             
         </config-file>
-
-        <framework src="com.google.android.gms:play-services-ads:+" />
         
-        <source-file src="src/android/libs/pollfish.jar" target-dir="libs"/>
+        
+        <framework src="com.google.android.gms:play-services-base:9.8.0" />
+
+        <source-file src="src/android/libs/pollfish-googleplay-4.3.1.jar" target-dir="libs"/>
         <source-file src="src/android/PollfishPlugin.java" target-dir="src/com/pollfish/cordova" />
         
         <config-file target="AndroidManifest.xml" parent="/manifest">
@@ -53,12 +54,13 @@
         </config-file>
         
         
-        <source-file src="src/ios/framework/pollfish.framework" custom="true" />
+        <source-file src="src/ios/pollfish.framework" custom="true" />
         
         <framework src="AdSupport.framework" />
         <framework src="CoreGraphics.framework" />
         <framework src="CoreTelephony.framework" />
-        
+        <framework src="SystemConfiguration.framework" />
+
         
         <header-file src="src/ios/PollfishPlugin.h" target-dir="PollfishPlugin"/>
         <source-file src="src/ios/PollfishPlugin.m" target-dir="PollfishPlugin"/>

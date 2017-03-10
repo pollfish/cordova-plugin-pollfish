@@ -9,7 +9,7 @@ Pollfish is a mobile monetization platform delivering surveys instead of ads thr
 ## Prerequisites
 
 *	Android 10+ using Google Play Services
-*	iOS version 6.0+
+*	iOS version 7.0+
 *	Apache Cordova v3.0.4+
 
 ## Quick Guide
@@ -19,9 +19,9 @@ Pollfish is a mobile monetization platform delivering surveys instead of ads thr
 * Set to Release mode and release in Store
 * Update your app's privacy policy
 
+<br/>
 
-
-![alt tag](https://www.pollfish.com/img/rocketMobile.png)
+![alt tag](https://www.pollfish.com/homeassets/images/rocketMobile.png)
 
 ## Steps Analytically
 
@@ -297,10 +297,12 @@ pollfishplugin.setAttributesMap(userAttributes);
 
 ```
 
+## Example
 
+If you want to have a look at sample code on how you can call and use Pollfish plugin in your app, you can a review files located at test/index.js and test/index.html
 
 ## More Info
 
-For more information on setting up Cordova see [the documentation](http://cordova.apache.org/docs/en/4.0.0/guide_cli_index.md.html#The%20Command-Line%20Interface)
+For more information on setting up Cordova see [the documentation](http://cordova.apache.org/docs/en/latest/guide/cli/index.html)
 
 For more info about Pollfish please check [Pollfish Website](http://www.pollfish.com)
