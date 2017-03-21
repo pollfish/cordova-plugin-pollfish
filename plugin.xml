@@ -33,7 +33,7 @@
         
         
         <framework src="com.google.android.gms:play-services-base:9.8.0" />
-        
+
         <source-file src="src/android/libs/pollfish-googleplay-4.3.1.jar" target-dir="libs"/>
         <source-file src="src/android/PollfishPlugin.java" target-dir="src/com/pollfish/cordova" />
         
@@ -54,13 +54,13 @@
         </config-file>
         
         
-        <source-file src="src/ios/pollfish.framework" custom="true" />
+        <framework src="src/ios/pollfish.framework" custom="true" />
         
         <framework src="AdSupport.framework" />
         <framework src="CoreGraphics.framework" />
         <framework src="CoreTelephony.framework" />
         <framework src="SystemConfiguration.framework" />
-        
+
         
         <header-file src="src/ios/PollfishPlugin.h" target-dir="PollfishPlugin"/>
         <source-file src="src/ios/PollfishPlugin.m" target-dir="PollfishPlugin"/>
