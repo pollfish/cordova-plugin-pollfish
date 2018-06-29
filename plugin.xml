@@ -34,7 +34,8 @@
         
         <framework src="com.google.android.gms:play-services-base:11.0.2" />
 
-        <source-file src="src/android/libs/pollfish-googleplay-4.3.4.jar" target-dir="libs"/>
+		<lib-file src="src/android/libs/pollfish-googleplay-4.3.4.jar" arch="device" />
+		
         <source-file src="src/android/PollfishPlugin.java" target-dir="src/com/pollfish/cordova" />
         
         <config-file target="AndroidManifest.xml" parent="/manifest">
