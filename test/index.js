@@ -61,6 +61,7 @@ var app = {
         pollfishplugin.setEventCallback('onPollfishSurveyCompleted',app.surveyCompletedEvent);
         pollfishplugin.setEventCallback('onPollfishSurveyNotAvailable',app.surveyNotAvailableEvent);
         pollfishplugin.setEventCallback('onPollfishUserNotEligible',app.userNotEligibleEvent);
+        pollfishplugin.setEventCallback('onPollfishUserRejectedSurvey',app.userRejectedSurveyEvent);
         
         pollfishplugin.setEventCallback('onPollfishOpened',app.pollfishPanelOpenEvent);
         pollfishplugin.setEventCallback('onPollfishClosed',app.pollfishPanelClosedEvent);
@@ -159,6 +160,13 @@ var app = {
     	console.log("Pollfish User Not Eligible");
     
     	document.getElementById('logger').innerHTML = "User Not Eligible"; 
+	},
+    
+	userRejectedSurveyEvent: function(id) {
+    
+    	console.log("Pollfish User Rejected Survey");
+    
+    	document.getElementById('logger').innerHTML = "User Rejected Survey"; 
 	},
     
 	pollfishPanelClosedEvent: function(id) {

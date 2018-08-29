@@ -7,6 +7,7 @@ static NSString* onPollfishSurveyReceived = nil;
 static NSString* onPollfishSurveyCompleted = nil;
 static NSString* onPollfishSurveyNotAvailable = nil;
 static NSString* onPollfishUserNotEligible = nil;
+static NSString* onPollfishUserRejectedSurvey = nil;
 static NSString* onPollfishOpened = nil;
 static NSString* onPollfishClosed = nil;
 
@@ -172,6 +173,21 @@ static NSString* onPollfishClosed = nil;
     }
 }
 
+- (void)userRejectedSurvey:(NSNotification *)notification
+{
+    NSLog(@"userRejectedSurvey notification");
+    
+    if(onPollfishUserRejectedSurvey != nil) {
+        
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:YES];
+        
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:onPollfishUserRejectedSurvey];
+    }else{
+        
+        NSLog(@"userRejectedSurvey notification not set");
+    }
+}
+
 - (void)surveyNotAvailable:(NSNotification *)notification
 {
     NSLog(@"surveyNotAvailable notification");
@@ -236,6 +252,16 @@ static NSString* onPollfishClosed = nil;
                                                      name:@"PollfishUserNotEligible" object:nil];
         
         onPollfishUserNotEligible = command.callbackId;
+        
+    }else if ([@"onPollfishUserRejectedSurvey" isEqualToString:eventName]) {
+        
+        NSLog(@"Pollfish onPollfishUserRejectedSurvey set");
+        
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userRejectedSurvey:)
+                                                     name:@"PollfishUserRejectedSurvey" object:nil];
+        
+        onPollfishUserRejectedSurvey = command.callbackId;
         
     }else if ([@"onPollfishOpened" isEqualToString:eventName]) {
         

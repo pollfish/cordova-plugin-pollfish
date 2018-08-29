@@ -1,6 +1,6 @@
 # Pollfish Cordova/PhoneGap plugin 
 
-![alt tag](https://storage.googleapis.com/pollfish-images/logoHome.png)
+![alt tag](https://www.pollfish.com/img/logoHome.png)
 
 Cordova/PhoneGap plugin to allow integration of Pollfish surveys into Android and iOS apps. 
 
@@ -9,7 +9,7 @@ Pollfish is a mobile monetization platform delivering surveys instead of ads thr
 ## Prerequisites
 
 *	Android 10+ using Google Play Services
-*	iOS version 7.0+
+*	iOS version 9.0+
 *	Apache Cordova v3.0.4+
 
 ## Quick Guide
@@ -47,7 +47,7 @@ To remove Pollfish plugin type:
 
 
 
-*In iOS if pollfish framework is not added automatically you may need to add it manually to your XCode project. In Xcode, select the target that you want to use and in the Build Phases tab expand the Link Binary With Libraries section. Press the + button, and press Add other… In the dialog box that appears, go to the Pollfish framework’s location (located in /src/ios/framework) and select it. The project will appear at the top of the Link Binary With Libraries section and will also be added to your project files (left-hand pane). The framework is a folder and you should add the whole folder into your project.*
+*In iOS you may need to add manually pollfish.framework to your XCode project. In Xcode, select the target that you want to use and in the Build Phases tab expand the Link Binary With Libraries section. Press the + button, and press Add other… In the dialog box that appears, go to the Pollfish framework’s location (located in /src/ios/framework) and select it. The project will appear at the top of the Link Binary With Libraries section and will also be added to your project files (left-hand pane). The framework is a folder and you should add the whole folder into your project.*
 
 
 
@@ -297,12 +297,10 @@ pollfishplugin.setAttributesMap(userAttributes);
 
 ```
 
-## Example
 
-If you want to have a look at sample code on how you can call and use Pollfish plugin in your app, you can a review files located at test/index.js and test/index.html
 
 ## More Info
 
-For more information on setting up Cordova see [the documentation](http://cordova.apache.org/docs/en/latest/guide/cli/index.html)
+For more information on setting up Cordova see [the documentation](http://cordova.apache.org/docs/en/4.0.0/guide_cli_index.md.html#The%20Command-Line%20Interface)
 
 For more info about Pollfish please check [Pollfish Website](http://www.pollfish.com)
