@@ -233,7 +233,7 @@ public class PollfishPlugin extends CordovaPlugin {
                         
                         PluginResult result = new PluginResult(PluginResult.Status.OK);
                         result.setKeepCallback(true);
-                        onPollfishUserRejectedSurveyListener.sendPluginResult(result);
+                        onPollfishUserRejectedSurvey.sendPluginResult(result);
                     }
                 }
             };
