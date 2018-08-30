@@ -13,6 +13,7 @@ import com.pollfish.interfaces.PollfishSurveyCompletedListener;
 import com.pollfish.interfaces.PollfishSurveyNotAvailableListener;
 import com.pollfish.interfaces.PollfishSurveyReceivedListener;
 import com.pollfish.interfaces.PollfishUserNotEligibleListener;
+import com.pollfish.interfaces.PollfishUserRejectedSurveyListener;
 import com.pollfish.main.PollFish;
 
 import org.apache.cordova.CallbackContext;
@@ -232,7 +233,7 @@ public class PollfishPlugin extends CordovaPlugin {
                         
                         PluginResult result = new PluginResult(PluginResult.Status.OK);
                         result.setKeepCallback(true);
-                        onPollfishUserRejectedSurveyEligible.sendPluginResult(result);
+                        onPollfishUserRejectedSurveyListener.sendPluginResult(result);
                     }
                 }
             };
@@ -253,7 +254,7 @@ public class PollfishPlugin extends CordovaPlugin {
                                       pollfishSurveyNotAvailableListener,
                                       pollfishSurveyCompletedListener,
                                       pollfishOpenedListener, pollfishClosedListener,
-                                      pollfishUserNotEligibleListener,pollfishUserNotEligibleListener,null,request_uuid);
+                                      pollfishUserNotEligibleListener,pollfishUserRejectedSurveyListener,null,request_uuid);
                         
                     }else{
                         
@@ -262,7 +263,7 @@ public class PollfishPlugin extends CordovaPlugin {
                                             pollfishSurveyNotAvailableListener,
                                             pollfishSurveyCompletedListener,
                                             pollfishOpenedListener, pollfishClosedListener,
-                                            pollfishUserNotEligibleListener,pollfishUserNotEligibleListener, null, request_uuid);
+                                            pollfishUserNotEligibleListener,pollfishUserRejectedSurveyListener, null, request_uuid);
                     }
                 }
             });
