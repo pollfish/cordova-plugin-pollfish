@@ -11,6 +11,8 @@ Pollfish is a mobile monetization platform delivering surveys instead of ads thr
 *	Android 10+ using Google Play Services
 *	iOS version 9.0+
 *	Apache Cordova v3.0.4+
+*	Android<7 (there is a known issue at the moment with android 7 so you will need to downgrade to use the plugin to android 6.4.0)
+```sudo cordova platform add android@6.4.0```
 
 ## Quick Guide
 
