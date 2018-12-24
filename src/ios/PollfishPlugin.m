@@ -106,14 +106,17 @@ static NSString* onPollfishClosed = nil;
     
     if(onPollfishSurveyReceived != nil) {
         
-        BOOL playfulSurveys = [[[notification userInfo] valueForKey:@"playfulSurvey"] boolValue];
-        int surveyPrice = [[[notification userInfo] valueForKey:@"surveyPrice"] intValue];
+        int surveyPrice = [[[notification userInfo] valueForKey:@"survey_cpa"] intValue];
+    	int surveyIR = [[[notification userInfo] valueForKey:@"survey_ir"] intValue];
+    	int surveyLOI = [[[notification userInfo] valueForKey:@"survey_loi"] intValue];
+    
+    	NSString *surveyClass =[[notification userInfo] valueForKey:@"survey_class"];
+  
         
-        NSLog(@"surveyReceived notification : Pollfish Survey Completed - Short Survey: %@ and survey Price: %d" , playfulSurveys?@"YES":@"NO",surveyPrice);
+   		NSLog(@"Pollfish: Survey Received - SurveyPrice:%d andSurveyIR: %d andSurveyLOI:%d andSurveyClass:%@", surveyPrice,surveyIR, surveyLOI, surveyClass);
         
-        
-        NSArray *keys = [NSArray arrayWithObjects:@"playfulSurveys", @"surveyPrice", nil];
-        NSArray *objects = [NSArray arrayWithObjects:[NSString stringWithFormat:@"%@",playfulSurveys?@"YES":@"NO"], [NSString stringWithFormat: @"%d",surveyPrice], nil];
+        NSArray *keys = [NSArray arrayWithObjects:@"survey_cpa", @"survey_ir", @"survey_loi", @"survey_class", nil];
+        NSArray *objects = [NSArray arrayWithObjects:[NSString stringWithFormat: @"%d",surveyPrice],[NSString stringWithFormat: @"%d",surveyIR],[NSString stringWithFormat: @"%d",surveyLOI],[NSString stringWithFormat: @"%@",surveyClass], nil];
         
         NSDictionary *dictionary = [NSDictionary dictionaryWithObjects:objects
                                                                forKeys:keys];
@@ -135,15 +138,19 @@ static NSString* onPollfishClosed = nil;
     
     if(onPollfishSurveyCompleted != nil) {
         
-        BOOL playfulSurveys = [[[notification userInfo] valueForKey:@"playfulSurvey"] boolValue];
-        int surveyPrice = [[[notification userInfo] valueForKey:@"surveyPrice"] intValue];
+       
+        int surveyPrice = [[[notification userInfo] valueForKey:@"survey_cpa"] intValue];
+    	int surveyIR = [[[notification userInfo] valueForKey:@"survey_ir"] intValue];
+    	int surveyLOI = [[[notification userInfo] valueForKey:@"survey_loi"] intValue];
+    
+    	NSString *surveyClass =[[notification userInfo] valueForKey:@"survey_class"];
+  
         
-        NSLog(@"surveyReceived notification : Pollfish Survey Completed - Short Survey: %@ and survey Price: %d" , playfulSurveys?@"YES":@"NO",surveyPrice);
+   		NSLog(@"Pollfish: Survey Completed - SurveyPrice:%d andSurveyIR: %d andSurveyLOI:%d andSurveyClass:%@", surveyPrice,surveyIR, surveyLOI, surveyClass);
         
-        
-        NSArray *keys = [NSArray arrayWithObjects:@"playfulSurveys", @"surveyPrice", nil];
-        NSArray *objects = [NSArray arrayWithObjects:[NSString stringWithFormat:@"%@",playfulSurveys?@"YES":@"NO"], [NSString stringWithFormat: @"%d",surveyPrice], nil];
-        
+        NSArray *keys = [NSArray arrayWithObjects:@"survey_cpa", @"survey_ir", @"survey_loi", @"survey_class", nil];
+        NSArray *objects = [NSArray arrayWithObjects:[NSString stringWithFormat: @"%d",surveyPrice],[NSString stringWithFormat: @"%d",surveyIR],[NSString stringWithFormat: @"%d",surveyLOI],[NSString stringWithFormat: @"%@",surveyClass], nil];
+       
         NSDictionary *dictionary = [NSDictionary dictionaryWithObjects:objects
                                                                forKeys:keys];
         

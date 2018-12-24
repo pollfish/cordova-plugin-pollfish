@@ -119,9 +119,10 @@ var app = {
     surveyReceivedEvent: function(id) {
     
     	try{   
-        	console.log("Pollfish Survey Received - playfulSurveys: " + id.playfulSurveys + " surveyPrice: " + id.surveyPrice);
+    	
+        	console.log("Pollfish Survey Received - CPA: " + id.survey_cpa + " IR: " + id.survey_ir + " LOI: " + id.survey_loi + " Survey Class: " + id.survey_class);
         
-       	 	document.getElementById('logger').innerHTML = "Survey Received - playfulSurveys: " + id.playfulSurveys + " surveyPrice: " + id.surveyPrice;
+       	 	document.getElementById('logger').innerHTML = "Survey Received - CPA: " + id.survey_cpa + " IR: " + id.survey_ir+ " LOI: " + id.survey_loi+ " Survey Class: " + id.survey_class;
         
     	}catch(e){
         
@@ -132,9 +133,9 @@ var app = {
 	surveyCompletedEvent: function(id) {
     
     	try{
-        	console.log("Pollfish Survey Completed - playfulSurveys: " + id.playfulSurveys + " surveyPrice: " + id.surveyPrice);
+         	console.log("Pollfish Survey Completed - CPA: " + id.survey_cpa + " IR: " + id.survey_ir + " LOI: " + id.survey_loi + " Survey Class: " + id.survey_class);
         
-        	document.getElementById('logger').innerHTML = "Survey Completed - playfulSurveys: " + id.playfulSurveys + " surveyPrice: " + id.surveyPrice;
+        	document.getElementById('logger').innerHTML = "Survey Completed - CPA: " + id.survey_cpa + " IR: " + id.survey_ir+ " LOI: " + id.survey_loi+ " Survey Class: " + id.survey_class;
         
     	}catch(e){
         

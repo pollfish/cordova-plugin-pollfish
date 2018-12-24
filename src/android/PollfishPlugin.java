@@ -9,12 +9,14 @@ import android.util.Log;
 import com.pollfish.constants.Position;
 import com.pollfish.interfaces.PollfishClosedListener;
 import com.pollfish.interfaces.PollfishOpenedListener;
-import com.pollfish.interfaces.PollfishSurveyCompletedListener;
+import com.pollfish.interfaces.PollfishCompletedSurveyListener;
 import com.pollfish.interfaces.PollfishSurveyNotAvailableListener;
-import com.pollfish.interfaces.PollfishSurveyReceivedListener;
+import com.pollfish.interfaces.PollfishReceivedSurveyListener;
 import com.pollfish.interfaces.PollfishUserNotEligibleListener;
 import com.pollfish.interfaces.PollfishUserRejectedSurveyListener;
 import com.pollfish.main.PollFish;
+import com.pollfish.classes.SurveyInfo;
+import com.pollfish.main.PollFish.ParamsBuilder;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
@@ -96,13 +98,14 @@ public class PollfishPlugin extends CordovaPlugin {
             Log.d(TAG, "indPadding: "+ indPadding);
             Log.d(TAG, "request_uuid: "+ request_uuid);
             
-            final PollfishSurveyReceivedListener pollfishSurveyReceivedListener = new PollfishSurveyReceivedListener() {
+            final PollfishReceivedSurveyListener pollfishReceivedSurveyListener = new PollfishReceivedSurveyListener() {
                 
                 @Override
-                public void onPollfishSurveyReceived(boolean playfulSurveys, int surveyPrice) {
-                    
-                    Log.d(TAG, "onPollfishSurveyReceived (" + playfulSurveys  + ","+ String.valueOf(surveyPrice) + ")");
-                    
+                public void onPollfishSurveyReceived(SurveyInfo surveyInfo) {
+        
+        
+        			Log.d(TAG, "Pollfish onPollfishSurveyReceived :: CPA: " + surveyInfo.getSurveyCPA()+ " SurveyClass: " + surveyInfo.getSurveyClass() + " LOI: " + surveyInfo.getSurveyLOI() + " IR: " + surveyInfo.getSurveyIR());
+   
                     if(onPollfishSurveyReceived!=null) {
                         
                         
@@ -110,8 +113,10 @@ public class PollfishPlugin extends CordovaPlugin {
                         
                         try {
                             
-                            json_object.put("playfulSurveys", playfulSurveys);
-                            json_object.put("surveyPrice"    , surveyPrice);
+                            json_object.put("survey_cpa", surveyInfo.getSurveyCPA());
+               				json_object.put("survey_ir", surveyInfo.getSurveyIR());
+               				json_object.put("survey_loi", surveyInfo.getSurveyLOI());
+               				json_object.put("survey_class", surveyInfo.getSurveyClass());
                             
                         } catch (JSONException exception) {
                             
@@ -128,21 +133,23 @@ public class PollfishPlugin extends CordovaPlugin {
                 }
             };
             
-            final PollfishSurveyCompletedListener pollfishSurveyCompletedListener = new PollfishSurveyCompletedListener() {
+            final PollfishCompletedSurveyListener pollfishCompletedSurveyListener = new PollfishCompletedSurveyListener() {
                 
                 @Override
-                public void onPollfishSurveyCompleted(boolean playfulSurveys, int surveyPrice) {
+                public void onPollfishSurveyCompleted(SurveyInfo surveyInfo) {
                     
-                    Log.d(TAG, "onPollfishSurveyCompleted (" + playfulSurveys + ","+ String.valueOf(surveyPrice) + ")");
-                    
+                  	Log.d(TAG, "Pollfish onPollfishSurveyCompleted :: CPA: " + surveyInfo.getSurveyCPA()+ " SurveyClass: " + surveyInfo.getSurveyClass() + " LOI: " + surveyInfo.getSurveyLOI() + " IR: " + surveyInfo.getSurveyIR());
+   
                     if(onPollfishSurveyCompleted!=null) {
                         
                         JSONObject json_object = new JSONObject();
                         
                         try {
                             
-                            json_object.put("playfulSurveys", playfulSurveys);
-                            json_object.put("surveyPrice"    , surveyPrice);
+                       		json_object.put("survey_cpa", surveyInfo.getSurveyCPA());
+               				json_object.put("survey_ir", surveyInfo.getSurveyIR());
+               				json_object.put("survey_loi", surveyInfo.getSurveyLOI());
+               				json_object.put("survey_class", surveyInfo.getSurveyClass());
                             
                         } catch (JSONException exception) {
                             
@@ -245,27 +252,25 @@ public class PollfishPlugin extends CordovaPlugin {
                 
                 @Override
                 public void run() {
-                    
-                    if(!customMode) {
-                        
-                        
-                        PollFish.init(cordova.getActivity(), apiKey, position,
-                                      indPadding, pollfishSurveyReceivedListener,
-                                      pollfishSurveyNotAvailableListener,
-                                      pollfishSurveyCompletedListener,
-                                      pollfishOpenedListener, pollfishClosedListener,
-                                      pollfishUserNotEligibleListener,pollfishUserRejectedSurveyListener,null,request_uuid);
-                        
-                    }else{
-                        
-                        PollFish.customInit(cordova.getActivity(), apiKey, position,
-                                            indPadding, pollfishSurveyReceivedListener,
-                                            pollfishSurveyNotAvailableListener,
-                                            pollfishSurveyCompletedListener,
-                                            pollfishOpenedListener, pollfishClosedListener,
-                                            pollfishUserNotEligibleListener,pollfishUserRejectedSurveyListener, null, request_uuid);
-                    }
-                }
+    
+                        ParamsBuilder paramsBuilder = new ParamsBuilder(apiKey)
+                        .indicatorPadding(indPadding)
+                        .indicatorPosition(position)
+                        .customMode(customMode)
+                        .releaseMode(!debugMode)
+                        .pollfishOpenedListener(pollfishOpenedListener)
+                        .pollfishUserRejectedSurveyListener(pollfishUserRejectedSurveyListener)
+                        .pollfishClosedListener(pollfishClosedListener)
+                        .pollfishCompletedSurveyListener(pollfishCompletedSurveyListener)
+                        .pollfishSurveyNotAvailableListener(pollfishSurveyNotAvailableListener)
+                        .pollfishReceivedSurveyListener(pollfishReceivedSurveyListener)
+                        .pollfishUserNotEligibleListener(pollfishUserNotEligibleListener)
+                        .requestUUID(request_uuid)
+                        .build();
+
+
+                	PollFish.initWith(cordova.getActivity(), paramsBuilder);
+                	}
             });
             
             return true;
@@ -358,7 +363,7 @@ public class PollfishPlugin extends CordovaPlugin {
             
             Log.d ("Pollfish", "onPollfishSurveyReceived set");
             
-            onPollfishSurveyReceived= callbackFunction;
+            onPollfishSurveyReceived = callbackFunction;
             
         }else if ("onPollfishSurveyNotAvailable".equals(eventName)) {
             
