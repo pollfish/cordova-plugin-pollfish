@@ -7,6 +7,5 @@
 - (void) show:(CDVInvokedUrlCommand*)command;
 - (void) hide:(CDVInvokedUrlCommand*)command;
 - (void) setEventCallback:(CDVInvokedUrlCommand*)command;
-- (void) setAttributesMap:(CDVInvokedUrlCommand*)command;
 
 @end

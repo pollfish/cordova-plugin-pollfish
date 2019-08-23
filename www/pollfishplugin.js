@@ -1,37 +1,37 @@
 /*global cordova, module*/
 
 module.exports = {
-
- 	
- 	/**
+    
+	/**
      * Function to init Pollfish
      *
-     * @param debugMode
-     * @param customMode
-     * @param apiKey
-     * @param position
-     * @param indPadding
-     */
-    
-    init: function(debugMode, customMode, apiKey,position,indPadding) {
-        
-        cordova.exec (undefined, undefined, "PollfishPlugin", "init", [debugMode, customMode, apiKey, position, indPadding]);
-        
-    },
-
-    
-    /**
-     * Function to init Pollfish with request uuid for s2s callback
-     *
-     * @param debugMode
-     * @param customMode
+     * @param releaseMode
+     * @param rewardMode
      * @param apiKey
      * @param position
      * @param request_uuid
+     * @param offerwallMode
      */
-    initWithRequestUUID: function(debugMode, customMode, apiKey,position,indPadding,request_uuid) {
+    init: function(releaseMode, rewardMode, apiKey,position,indPadding,request_uuid, offerwallMode) {
         
-        cordova.exec (undefined, undefined, "PollfishPlugin", "init", [debugMode, customMode, apiKey, position, indPadding,request_uuid]);
+        cordova.exec (undefined, undefined, "PollfishPlugin", "init", [releaseMode, rewardMode, apiKey, position, indPadding,request_uuid, offerwallMode]);
+        
+    },
+    
+    /**
+     * Function to init Pollfish
+     *
+     * @param releaseMode
+     * @param rewardMode
+     * @param apiKey
+     * @param position
+     * @param request_uuid
+     * @param offerwallMode
+     * @param userAttributes
+     */
+    initWithUserAttributes: function(releaseMode, rewardMode, apiKey,position,indPadding,request_uuid, offerwallMode, userAttributes) {
+        
+        cordova.exec (undefined, undefined, "PollfishPlugin", "init", [releaseMode, rewardMode, apiKey, position, indPadding,request_uuid, offerwallMode, userAttributes]);
         
     },
     

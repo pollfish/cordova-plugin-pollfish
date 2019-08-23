@@ -18,13 +18,13 @@ static NSString* onPollfishClosed = nil;
     
     NSLog(@"[command arguments] count: %d", [command arguments].count);
     
-    BOOL debugMode = [[[command arguments] objectAtIndex:0] boolValue];
+    BOOL releaseMode = [[[command arguments] objectAtIndex:0] boolValue];
     
-    NSLog(@"debugMode: %@",debugMode ? @"Yes" : @"No");
+    NSLog(@"releaseMode: %@",releaseMode ? @"Yes" : @"No");
     
-    BOOL customMode = [[[command arguments] objectAtIndex:1] boolValue];
+    BOOL rewardMode = [[[command arguments] objectAtIndex:1] boolValue];
     
-    NSLog(@"customMode: %@",customMode ? @"Yes" : @"No");
+    NSLog(@"rewardMode: %@",rewardMode ? @"Yes" : @"No");
     
     NSString* appKey = [[command arguments] objectAtIndex:2];
     
@@ -37,21 +37,44 @@ static NSString* onPollfishClosed = nil;
     
     NSString* requestUUID = nil;
     
-    if([command arguments].count>5)
+    if([command arguments].count>=5)
     {
         requestUUID=[[command arguments] objectAtIndex:5];
     }
     
     NSLog(@"requestUUID: %@",requestUUID);
     
+	BOOL offerwallMode = false;
     
-    [Pollfish initAtPosition: pos
-                 withPadding: padding
-             andDeveloperKey: appKey
-               andDebuggable: debugMode
-               andCustomMode: customMode
-              andRequestUUID: requestUUID];
     
+    if([command arguments].count>=6)
+    {
+        offerwallMode=[[command arguments] objectAtIndex:6];
+    }
+    
+    NSLog(@"offerwallMode: %@",offerwallMode ? @"Yes" : @"No");
+    
+    
+    NSMutableDictionary *userAttributesDict;
+    
+    if([command arguments].count>=7)
+    {
+        userAttributesDict=[[command arguments] objectAtIndex:7];
+    }
+    
+    
+    PollfishParams *pollfishParams =  [PollfishParams initWith:^(PollfishParams *pollfishParams) {
+        
+        pollfishParams.indicatorPosition=pos;
+        pollfishParams.indicatorPadding=padding;
+        pollfishParams.releaseMode= releaseMode;
+        pollfishParams.offerwallMode= offerwallMode;
+        pollfishParams.rewardMode=rewardMode;
+        pollfishParams.requestUUID=requestUUID;
+        pollfishParams.userAttributes=userAttributesDict;
+    }];
+    
+    [Pollfish initWithAPIKey:appKey andParams:pollfishParams];
 }
 
 - (void) show:(CDVInvokedUrlCommand*)command
@@ -112,12 +135,15 @@ static NSString* onPollfishClosed = nil;
     
     	NSString *surveyClass =[[notification userInfo] valueForKey:@"survey_class"];
   
+        NSString *rewardName = [[notification userInfo] valueForKey:@"reward_name"];
+    
+      	int rewardValue = [[[notification userInfo] valueForKey:@"reward_value"] intValue];
+    
+   		NSLog(@"Pollfish: Survey Received - SurveyPrice:%d andSurveyIR: %d andSurveyLOI:%d andSurveyClass:%@ andRewardName:%@ andRewardValue:%d", surveyPrice,surveyIR, surveyLOI, surveyClass, rewardName, rewardValue);
         
-   		NSLog(@"Pollfish: Survey Received - SurveyPrice:%d andSurveyIR: %d andSurveyLOI:%d andSurveyClass:%@", surveyPrice,surveyIR, surveyLOI, surveyClass);
-        
-        NSArray *keys = [NSArray arrayWithObjects:@"survey_cpa", @"survey_ir", @"survey_loi", @"survey_class", nil];
-        NSArray *objects = [NSArray arrayWithObjects:[NSString stringWithFormat: @"%d",surveyPrice],[NSString stringWithFormat: @"%d",surveyIR],[NSString stringWithFormat: @"%d",surveyLOI],[NSString stringWithFormat: @"%@",surveyClass], nil];
-        
+        NSArray *keys = [NSArray arrayWithObjects:@"survey_cpa", @"survey_ir", @"survey_loi", @"survey_class",@"reward_name", @"reward_value", nil];
+        NSArray *objects = [NSArray arrayWithObjects:[NSString stringWithFormat: @"%d",surveyPrice],[NSString stringWithFormat: @"%d",surveyIR],[NSString stringWithFormat: @"%d",surveyLOI],[NSString stringWithFormat: @"%@",surveyClass],[NSString stringWithFormat: @"%@",rewardName],[NSString stringWithFormat: @"%d",rewardValue], nil];
+       
         NSDictionary *dictionary = [NSDictionary dictionaryWithObjects:objects
                                                                forKeys:keys];
         
@@ -144,12 +170,16 @@ static NSString* onPollfishClosed = nil;
     	int surveyLOI = [[[notification userInfo] valueForKey:@"survey_loi"] intValue];
     
     	NSString *surveyClass =[[notification userInfo] valueForKey:@"survey_class"];
-  
+  		NSString *rewardName = [[notification userInfo] valueForKey:@"reward_name"];
+    
+      	int rewardValue = [[[notification userInfo] valueForKey:@"reward_value"] intValue];
+    
+   		
         
-   		NSLog(@"Pollfish: Survey Completed - SurveyPrice:%d andSurveyIR: %d andSurveyLOI:%d andSurveyClass:%@", surveyPrice,surveyIR, surveyLOI, surveyClass);
+   		NSLog(@"Pollfish: Survey Completed - SurveyPrice:%d andSurveyIR: %d andSurveyLOI:%d andSurveyClass:%@ andRewardName:%@ andRewardValue:%d", surveyPrice,surveyIR, surveyLOI, surveyClass, rewardName, rewardValue);
         
-        NSArray *keys = [NSArray arrayWithObjects:@"survey_cpa", @"survey_ir", @"survey_loi", @"survey_class", nil];
-        NSArray *objects = [NSArray arrayWithObjects:[NSString stringWithFormat: @"%d",surveyPrice],[NSString stringWithFormat: @"%d",surveyIR],[NSString stringWithFormat: @"%d",surveyLOI],[NSString stringWithFormat: @"%@",surveyClass], nil];
+        NSArray *keys = [NSArray arrayWithObjects:@"survey_cpa", @"survey_ir", @"survey_loi", @"survey_class",@"reward_name", @"reward_value", nil];
+        NSArray *objects = [NSArray arrayWithObjects:[NSString stringWithFormat: @"%d",surveyPrice],[NSString stringWithFormat: @"%d",surveyIR],[NSString stringWithFormat: @"%d",surveyLOI],[NSString stringWithFormat: @"%@",surveyClass],[NSString stringWithFormat: @"%@",rewardName],[NSString stringWithFormat: @"%d",rewardValue], nil];
        
         NSDictionary *dictionary = [NSDictionary dictionaryWithObjects:objects
                                                                forKeys:keys];
@@ -289,14 +319,6 @@ static NSString* onPollfishClosed = nil;
         
         onPollfishClosed = command.callbackId;
     }
-}
-
-
-- (void) setAttributesMap:(CDVInvokedUrlCommand*)command{
-    
-    NSLog(@"Pollfish setAttributesMap set");
-    
-    [Pollfish setAttributeDictionary:[[command arguments] objectAtIndex:0]];
 }
 
 

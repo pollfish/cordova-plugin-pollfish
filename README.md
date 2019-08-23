@@ -12,10 +12,12 @@ Pollfish is a mobile monetization platform delivering surveys instead of ads thr
 
 ## Quick Guide
 
-* Create Pollfish developer account, create new app and grap it's API key
+* Create Pollfish Puvlisher account, create new app and grap it's API key
 * Install Pollfish plugin and call init function
-* Set to Release mode and release in Store
 * Update your app's privacy policy
+* Set to Release mode and publish in Store
+* Request your account to get verified
+
 
 <br/>
 
@@ -23,11 +25,11 @@ Pollfish is a mobile monetization platform delivering surveys instead of ads thr
 
 ## Steps Analytically
 
-### 1. Obtain a Developer Account
+### 1. Obtain a Publisher Account
 
-Register as a Developer at [www.pollfish.com](http://www.pollfish.com)
+Register as a Publisher at [www.pollfish.com](http://www.pollfish.com)
 
-### 2. Add new app in Pollfish panel and copy the given API Key
+### 2. Add new app on Pollfish panel and copy the given API Key
 
 Login at [www.pollfish.com](http://www.pollfish.com) and add a new app at Pollfish panel in section My Apps and copy the given API key for this app to use later in your init function in your app.
 
@@ -54,22 +56,35 @@ To remove Pollfish plugin type:
 
 Init function takes the following parameters:
 
-1.	**debugMode**: - Choose Debug or Release Mode
-2.	**customMode**: - Init or custom init
+1.	**releaseMode**: - Choose Debug or Release Mode
+2.	**rewardMode**: - Init in reward mode (skip Pollfish indicator to show a custom prompt)
 3.	**api_key**: - Your API Key (from step 2)
 4.	**pos**: - The Position where you wish to place the Pollfish indicator. There are four different options {Position.TOP_LEFT, Position.BOTTOM_LEFT, Position.MIDDLE_LEFT, Position.TOP_RIGHT, Position.BOTTOM_RIGHT, Position.MIDDLE_RIGHT}
 5.	**padding**: - The padding (in dp) from top or bottom according to Position of the indicator specified before (0 is the default value – |*if used in MIDDLE position, padding is calculating from top).
+6.	**request_uuid**: - Sets a unique id to identify a user and be passed through server-to-server callbacks
+7.	**offerwallMode**: - Sets Pollfish to offerwall mode.
+8.	**userAttributes**: - Send user attributes to skip or shorten Pollfish demographic surveys
+
+
+var request_uuid;
+var padding; 
+var offerwallMode; 
+var userAttributes={};
+
+
 
 For example:
 
 ```
-var debugMode = true;
-var customMode = false;
+var releaseMode = false;
+var rewardMode = false;
 var api_key = "YOUR_API_KEY";
-var pos=pollfishplugin.Position.TOP_LEFT;
+var pos = pollfishplugin.Position.TOP_LEFT;
 var padding = 50;
- 
-pollfishplugin.init (debugMode,customMode,api_key,pos,padding);
+var request_uuid = "my_id";
+var offerwallMode = true; 
+
+pollfishplugin.init(releaseMode,rewardMode,api_key,pos,padding,request_uuid, offerwallMode); 
 ```
 
 #### Debug Vs Release Mode
@@ -82,33 +97,33 @@ You can use Pollfish either in Debug or in Release mode.
 
 **Note: In Android debugMode parameter is ignored. Your app turns into debug mode once it is signed with a debug key. If you sign your app with a release key it automatically turns into Release mode.**
 
-**Note: Be careful to turn the debugMode parameter to false when you release your app in a relevant app store!!**
+**Note: Be careful to turn the releaseMode parameter to true when you release your app in a relevant app store!!**
 
 
 
-#### init Vs custom init
+#### Reward Mode 
 
-*	**init function** is the standard way of using Pollfish in your apps. Using init function enables controlling the behavior of Pollfish in an app from Pollfish panel.
-
-*	**custom init function** ignores Pollfish behavior from Pollfish panel. It always skips showing Pollfish indicator (small red rectangle) and always force open Pollfish view to app users. This method is usually used when app developers want to incentivize first somehow their users before completing surveys to increase completion rates. Both init and customInit functions have the same arguments.
+Reward mode false during initialization enables controlling the behavior of Pollfish in an app from Pollfish panel. Enabling reward mode ignores Pollfish behavior from Pollfish panel. It always skips showing Pollfish indicator (small button) and always force open Pollfish view to app users. This method is usually used when app developers want to incentivize first somehow their users before completing surveys to increase completion rates.
 
 #### 4.1 Other Init functions (optional)
 
-##### Passing custom parameter for server to server postback calls
+##### Passing user attributes during initialization
 
-If you need to pass a custom parameter (for example a UUID as registered in your system) through Pollfish init function within the SDK and receive it back with Server to Server, survey completed postback call you can use
+You can send attributes that you receive from your app regarding a user, in order to receive a better fill rate and higher priced surveys. 
+
+
+You can see a detailed list of the user attribues you can pass with their keys at the following [link](https://www.pollfish.com/docs/demographic-surveys)
 
 For example:
 
 ```
-var debugMode = true;
-var customMode = false;
-var api_key = "YOUR_API_KEY";
-var pos=pollfishplugin.Position.TOP_LEFT;
-var padding = 50;
-var requestUUID = "my_uuid";
+var userAttributes = {};
 
-pollfishplugin.initWithRequestUUID (debugMode,customMode,api_key,pos,padding,requestUUID);
+userAttributes['FacebookID'] = 'My Facebook';
+userAttributes['LinkedInID'] = 'My LinkedIn';
+
+pollfishplugin.initWithUserAttributes(releaseMode,rewardMode,api_key,pos,padding,request_uuid,offerwallMode,userAttributes); 
+ 
 ```
 
 ### 5. Update your Privacy Policy
@@ -136,7 +151,7 @@ document.addEventListener("orientationchange", app.updateOrientation,false);
 
 ```
 updateOrientation: function () {
-    pollfishplugin.init (debugmode,customMode,api_key,pos,padding);
+	pollfishplugin.init(releaseMode,rewardMode,api_key,pos,padding,request_uuid, offerwallMode); 
 }
 ```
 
@@ -152,7 +167,7 @@ document.addEventListener("resume", app.onResume, false);
 
 ```
 onResume: function () {
-    pollfishplugin.init (debugmode,customMode,api_key,pos,padding);
+ 	pollfishplugin.init(releaseMode,rewardMode,api_key,pos,padding,request_uuid, offerwallMode); 
 }
 ```
 
@@ -173,8 +188,8 @@ pollfishplugin.setEventCallback('onPollfishSurveyReceived',app.surveyReceivedEve
 surveyReceivedEvent: function(id) {
 
 try{
-  	console.log("Pollfish Survey Received - CPA: " + id.survey_cpa + " IR: " + id.survey_ir + " LOI: " + id.survey_loi + " Survey Class: " + id.survey_class);
-        
+	console.log("Pollfish Survey Received - CPA: " + id.survey_cpa + " IR: " + id.survey_ir + " LOI: " + id.survey_loi + " Survey Class: " + id.survey_class+ " Reward Name: " + id.reward_name + " Reward Value: " + id.reward_value);
+                
  }catch(e){}
 }
 ```
@@ -193,7 +208,7 @@ pollfishplugin.setEventCallback('onPollfishSurveyCompleted',app.surveyCompletedE
 surveyCompletedEvent: function(id) {
 
 try{
- 	console.log("Pollfish Survey Completed - CPA: " + id.survey_cpa + " IR: " + id.survey_ir + " LOI: " + id.survey_loi + " Survey Class: " + id.survey_class);
+	console.log("Pollfish Survey Completed - CPA: " + id.survey_cpa + " IR: " + id.survey_ir + " LOI: " + id.survey_loi + " Survey Class: " + id.survey_class + " Reward Name: " + id.reward_name + " Reward Value: " + id.reward_value);
         
  }catch(e){}
 }
@@ -281,26 +296,10 @@ or
 pollfishplugin.hidePollfish();
 ```
 
-#### 9.2 Set user attributes (optional)
-
-You can set attributes that you receive from your app regarding a user in order to receive a better fill rate and higher priced surveys. 
-
-For example:
-
-```
-var userAttributes = {};
-
-userAttributes['FacebookID'] = 'My Facebook';
-userAttributes['LinkedInID'] = 'My LinkedIn';
-
-pollfishplugin.setAttributesMap(userAttributes);
-
-```
-
 
 
 ## More Info
 
 For more information on setting up Cordova see [the documentation](http://cordova.apache.org/docs/en/4.0.0/guide_cli_index.md.html#The%20Command-Line%20Interface)
 
-For more info about Pollfish please check [Pollfish Website](http://www.pollfish.com)
+For more info about Pollfish please check [Pollfish Website](http://www.pollfish.com/publisher)

@@ -17,11 +17,14 @@
  * under the License.
  */
 
-var debugmode;
-var customMode;
+var releaseMode;
+var rewardMode;
 var api_key;
 var pos;
+var request_uuid;
 var padding; 
+var offerwallMode; 
+var userAttributes={};
  
  
 var app = {
@@ -46,15 +49,14 @@ var app = {
   		
   		// initialise Pollfish
  		     
-		debugmode = true;
-		customMode = false;
+		releaseMode = false;
+		rewardMode = true;
 		api_key = "298f3f43-1a78-4da4-ab55-24c21c1c0ea8";
 		pos=pollfishplugin.Position.TOP_LEFT;
 		padding = 50; 
-    
-        pollfishplugin.init (debugmode,customMode,api_key,pos,padding); 
- 
-
+		offerwallMode = true;
+		request_uuid="my_id";
+		
         // register to listen to Pollfish events
         
         pollfishplugin.setEventCallback('onPollfishSurveyReceived',app.surveyReceivedEvent);
@@ -65,7 +67,7 @@ var app = {
         
         pollfishplugin.setEventCallback('onPollfishOpened',app.pollfishPanelOpenEvent);
         pollfishplugin.setEventCallback('onPollfishClosed',app.pollfishPanelClosedEvent);
-        
+    
         
          // register to listen when app comes to foreground
         
@@ -77,13 +79,13 @@ var app = {
 
  		// sent user attributes 
  		
-     	var userAttributes = {};
         
         userAttributes['FacebookID'] = 'My Facebook';
         userAttributes['LinkedInID'] = 'My LinkedIn';
         
-        pollfishplugin.setAttributesMap(userAttributes);
-        
+               
+        pollfishplugin.initWithUserAttributes(releaseMode,rewardMode,api_key,pos,padding,request_uuid,offerwallMode,userAttributes); 
+ 
         
 		// manually call show or hide Pollfish
    
@@ -105,24 +107,23 @@ var app = {
     
     	console.log("PollfishPlugin updateOrientation");
     
-    	pollfishplugin.init (debugmode,customMode,api_key,pos,padding);
-   
+ 		pollfishplugin.init(releaseMode,rewardMode,api_key,pos,padding,request_uuid, offerwallMode); 
 	},
 	
 	onResume: function () {
    
    		console.log("PollfishPlugin onResume");
     
-    	pollfishplugin.init (debugmode,customMode,api_key,pos,padding);
+ 		pollfishplugin.init(releaseMode,rewardMode,api_key,pos,padding,offerwallMode); 
 	},
     
     surveyReceivedEvent: function(id) {
     
     	try{   
     	
-        	console.log("Pollfish Survey Received - CPA: " + id.survey_cpa + " IR: " + id.survey_ir + " LOI: " + id.survey_loi + " Survey Class: " + id.survey_class);
+        	console.log("Pollfish Survey Received - CPA: " + id.survey_cpa + " IR: " + id.survey_ir + " LOI: " + id.survey_loi + " Survey Class: " + id.survey_class+ " Reward Name: " + id.reward_name + " Reward Value: " + id.reward_value);
         
-       	 	document.getElementById('logger').innerHTML = "Survey Received - CPA: " + id.survey_cpa + " IR: " + id.survey_ir+ " LOI: " + id.survey_loi+ " Survey Class: " + id.survey_class;
+       	 	document.getElementById('logger').innerHTML = "Survey Received - CPA: " + id.survey_cpa + " IR: " + id.survey_ir+ " LOI: " + id.survey_loi+ " Survey Class: " + id.survey_class + " Reward Name: " + id.reward_name + " Reward Value: " + id.reward_value;
         
     	}catch(e){
         
@@ -133,9 +134,9 @@ var app = {
 	surveyCompletedEvent: function(id) {
     
     	try{
-         	console.log("Pollfish Survey Completed - CPA: " + id.survey_cpa + " IR: " + id.survey_ir + " LOI: " + id.survey_loi + " Survey Class: " + id.survey_class);
+         	console.log("Pollfish Survey Completed - CPA: " + id.survey_cpa + " IR: " + id.survey_ir + " LOI: " + id.survey_loi + " Survey Class: " + id.survey_class + " Reward Name: " + id.reward_name + " Reward Value: " + id.reward_value);
         
-        	document.getElementById('logger').innerHTML = "Survey Completed - CPA: " + id.survey_cpa + " IR: " + id.survey_ir+ " LOI: " + id.survey_loi+ " Survey Class: " + id.survey_class;
+        	document.getElementById('logger').innerHTML = "Survey Completed - CPA: " + id.survey_cpa + " IR: " + id.survey_ir+ " LOI: " + id.survey_loi+ " Survey Class: " + id.survey_class + " Reward Name: " + id.reward_name + " Reward Value: " + id.reward_value;
         
     	}catch(e){
         
