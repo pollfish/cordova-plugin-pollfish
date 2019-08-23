@@ -63,15 +63,6 @@ Init function takes the following parameters:
 5.	**padding**: - The padding (in dp) from top or bottom according to Position of the indicator specified before (0 is the default value – |*if used in MIDDLE position, padding is calculating from top).
 6.	**request_uuid**: - Sets a unique id to identify a user and be passed through server-to-server callbacks
 7.	**offerwallMode**: - Sets Pollfish to offerwall mode.
-8.	**userAttributes**: - Send user attributes to skip or shorten Pollfish demographic surveys
-
-
-var request_uuid;
-var padding; 
-var offerwallMode; 
-var userAttributes={};
-
-
 
 For example:
 
