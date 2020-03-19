@@ -8,6 +8,8 @@
 #import "UserAttributesDictionary.h"
 #import <CoreLocation/CoreLocation.h>
 
+
+
 typedef NS_ENUM(NSInteger, PollfishPosition) {
     PollFishPositionTopLeft,
     PollFishPositionTopRight,
@@ -73,6 +75,12 @@ typedef void(^PollfishParamsBlock)(PollfishParams *pollfishParams);
  * Check if a Pollfish survey is present on device
  */
 + (BOOL) isPollfishPresent;
+
+/**
+ * Check if a Pollfish panel is open
+ */
++ (BOOL) isPollfishPanelOpen;
+
 
 
 /**
