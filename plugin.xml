@@ -47,20 +47,21 @@
     
     <platform name="ios">
         
-        <config-file target="config.xml" parent="/widget">
+      <config-file target="config.xml" parent="/widget">
             <feature name="PollfishPlugin">
                 <param name="ios-package" value="PollfishPlugin" />
+                 <param name="onload" value="true" />
             </feature>
         </config-file>
         
-        
-        <source-file src="src/ios/framework/pollfish.framework" custom="true" />
-        
-        <framework src="AdSupport.framework" />
-        <framework src="WebKit.framework" />
-        <framework src="CoreGraphics.framework" />
-        <framework src="CoreTelephony.framework" />
-        <framework src="SystemConfiguration.framework" />
+        <podspec>
+            <config>
+                <source url="https://cdn.cocoapods.org/"/>
+            </config>
+            <pods use-frameworks="true">
+                <pod name="Pollfish" spec="5.2.5"/>
+            </pods>
+        </podspec>
         
         
         <header-file src="src/ios/PollfishPlugin.h" target-dir="PollfishPlugin"/>
