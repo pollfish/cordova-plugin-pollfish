@@ -1,4 +1,4 @@
-# Pollfish Cordova/PhoneGap plugin 
+# Pollfish Cordova/PhoneGap/Ionic plugin 
 
 Cordova/PhoneGap plugin to allow integration of Pollfish surveys into Android and iOS apps. 
 
