@@ -86,20 +86,20 @@ public class PollfishPlugin extends CordovaPlugin {
             
             String request_uuid_temp =null;
             
-            if(pollfishParams.length()>=5) {
+            if(pollfishParams.length()>=6) {
                 request_uuid_temp  =pollfishParams.getString(5);
             }
                      
             boolean offerwallMode_temp =false;
         
-            if(pollfishParams.length()>=6) {
+            if(pollfishParams.length()>=7) {
                 offerwallMode_temp  = pollfishParams.getBoolean(6);
             }
        
              JSONObject mapObject_temp = null;
              UserProperties userProperties_temp=null;
              
-             if(pollfishParams.length()>=7) {
+             if(pollfishParams.length()>=8) {
                
                mapObject_temp  = pollfishParams.optJSONObject(7);
             
