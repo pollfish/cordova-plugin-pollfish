@@ -37,7 +37,7 @@ static NSString* onPollfishClosed = nil;
     
     NSString* requestUUID = nil;
     
-    if([command arguments].count>=5)
+    if([command arguments].count>=6)
     {
         requestUUID=[[command arguments] objectAtIndex:5];
     }
@@ -47,7 +47,7 @@ static NSString* onPollfishClosed = nil;
 	BOOL offerwallMode = false;
     
     
-    if([command arguments].count>=6)
+    if([command arguments].count>=7)
     {
         offerwallMode=[[command arguments] objectAtIndex:6];
     }
@@ -57,7 +57,7 @@ static NSString* onPollfishClosed = nil;
     
     NSMutableDictionary *userAttributesDict;
     
-    if([command arguments].count>=7)
+    if([command arguments].count>=8)
     {
         userAttributesDict=[[command arguments] objectAtIndex:7];
     }
