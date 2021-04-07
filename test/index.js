@@ -28,88 +28,63 @@ var userAttributes={};
  
  
 var app = {
-    // Application Constructor
+
     initialize: function() {
         this.bindEvents();
     },
-    // Bind Event Listeners
-    //
-    // Bind any events that are required on startup. Common events are:
-    // 'load', 'deviceready', 'offline', and 'online'.
+	
     bindEvents: function() {
         document.addEventListener('deviceready', this.onDeviceReady, false);
     },
-    // deviceready Event Handler
-    //
-    // The scope of 'this' is the event. In order to call the 'receivedEvent'
-    // function, we must explicitly call 'app.receivedEvent(...);'
-    onDeviceReady: function() {
+	
+	onDeviceReady: function() {
        
         app.receivedEvent('deviceready'); 
   		
   		// initialise Pollfish
- 		     
+		
 		releaseMode = false;
 		rewardMode = true;
-		api_key = "298f3f43-1a78-4da4-ab55-24c21c1c0ea8";
-		pos=pollfishplugin.Position.TOP_LEFT;
+		api_key = "YOUR_API_KEY";
+		pos = pollfishplugin.Position.TOP_LEFT;
 		padding = 50; 
 		offerwallMode = true;
-		request_uuid="my_id";
+		request_uuid = "my_id";
 		
         // register to listen to Pollfish events
         
-        pollfishplugin.setEventCallback('onPollfishSurveyReceived',app.surveyReceivedEvent);
-        pollfishplugin.setEventCallback('onPollfishSurveyCompleted',app.surveyCompletedEvent);
-        pollfishplugin.setEventCallback('onPollfishSurveyNotAvailable',app.surveyNotAvailableEvent);
-        pollfishplugin.setEventCallback('onPollfishUserNotEligible',app.userNotEligibleEvent);
-        pollfishplugin.setEventCallback('onPollfishUserRejectedSurvey',app.userRejectedSurveyEvent);
-        
-        pollfishplugin.setEventCallback('onPollfishOpened',app.pollfishPanelOpenEvent);
-        pollfishplugin.setEventCallback('onPollfishClosed',app.pollfishPanelClosedEvent);
+        pollfishplugin.setEventCallback('onPollfishSurveyReceived', app.surveyReceivedEvent);
+        pollfishplugin.setEventCallback('onPollfishSurveyCompleted', app.surveyCompletedEvent);
+        pollfishplugin.setEventCallback('onPollfishSurveyNotAvailable', app.surveyNotAvailableEvent);
+        pollfishplugin.setEventCallback('onPollfishUserNotEligible', app.userNotEligibleEvent);
+        pollfishplugin.setEventCallback('onPollfishUserRejectedSurvey', app.userRejectedSurveyEvent);    
+        pollfishplugin.setEventCallback('onPollfishOpened', app.pollfishPanelOpenEvent);
+        pollfishplugin.setEventCallback('onPollfishClosed', app.pollfishPanelClosedEvent);
     
-        
-         // register to listen when app comes to foreground
+        // register to listen when app comes to foreground
         
         document.addEventListener("resume", app.onResume, false);
         
-        // register to listen when app changes orientation
- 
-        document.addEventListener("orientationchange", app.updateOrientation,false);
-
  		// sent user attributes 
  		
-        
         userAttributes['FacebookID'] = 'My Facebook';
         userAttributes['LinkedInID'] = 'My LinkedIn';
-        
                
-        pollfishplugin.initWithUserAttributes(releaseMode,rewardMode,api_key,pos,padding,request_uuid,offerwallMode,userAttributes); 
+        pollfishplugin.initWithUserAttributes(releaseMode, 
+			rewardMode, api_key, pos, padding, request_uuid, offerwallMode, userAttributes); 
  
-        
 		// manually call show or hide Pollfish
    
-        document.getElementById('show').addEventListener('click', function() {
-                                                        
-                                                         pollfishplugin.showPollfish();
-                                                        
-                                                         }, false);
+        document.getElementById('show').addEventListener('click', function() {                                              
+			pollfishplugin.showPollfish();
+		}, false);
         
-        document.getElementById('hide').addEventListener('click', function() {
-                                                         
-                                                         pollfishplugin.hidePollfish();
-                                                    
-                                                         }, false);
+        document.getElementById('hide').addEventListener('click', function() {               
+        	pollfishplugin.hidePollfish();                                        
+		}, false);
   
     },
     
-	updateOrientation: function () {
-    
-    	console.log("PollfishPlugin updateOrientation");
-    
- 		pollfishplugin.init(releaseMode,rewardMode,api_key,pos,padding,request_uuid, offerwallMode); 
-	},
-	
 	onResume: function () {
    
    		console.log("PollfishPlugin onResume");

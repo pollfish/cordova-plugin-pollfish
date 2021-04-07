@@ -20,40 +20,41 @@ static NSString* onPollfishClosed = nil;
     
     BOOL releaseMode = [[[command arguments] objectAtIndex:0] boolValue];
     
-    NSLog(@"releaseMode: %@",releaseMode ? @"Yes" : @"No");
+    NSLog(@"releaseMode: %@", releaseMode ? @"Yes" : @"No");
     
     BOOL rewardMode = [[[command arguments] objectAtIndex:1] boolValue];
     
-    NSLog(@"rewardMode: %@",rewardMode ? @"Yes" : @"No");
+    NSLog(@"rewardMode: %@", rewardMode ? @"Yes" : @"No");
     
     NSString* appKey = [[command arguments] objectAtIndex:2];
+
+    NSLog(@"appKey: %@", appKey);
     
     int pos = [[[command arguments] objectAtIndex:3] integerValue];
+
+    NSLog(@"pos: %d", pos);
+
     int padding = [[[command arguments] objectAtIndex:4] integerValue];
     
-    NSLog(@"appKey: %@",appKey);
-    NSLog(@"pos: %d",pos);
-    NSLog(@"padding: %d",padding);
+    NSLog(@"padding: %d", padding);
     
     NSString* requestUUID = nil;
     
-    if([command arguments].count>=6)
+    if([command arguments].count >= 6)
     {
         requestUUID=[[command arguments] objectAtIndex:5];
     }
     
-    NSLog(@"requestUUID: %@",requestUUID);
+    NSLog(@"requestUUID: %@", requestUUID);
     
 	BOOL offerwallMode = false;
     
-    
-    if([command arguments].count>=7)
+    if([command arguments].count >= 7)
     {
-        offerwallMode=[[command arguments] objectAtIndex:6];
+        offerwallMode = [[[command arguments] objectAtIndex:6] boolValue];
     }
     
-    NSLog(@"offerwallMode: %@",offerwallMode ? @"Yes" : @"No");
-    
+    NSLog(@"offerwallMode: %d", offerwallMode);
     
     NSMutableDictionary *userAttributesDict;
     
@@ -61,20 +62,25 @@ static NSString* onPollfishClosed = nil;
     {
         userAttributesDict=[[command arguments] objectAtIndex:7];
     }
+
+    PollfishParams * pollfishParams = [[PollfishParams alloc] init:appKey];
+    [pollfishParams indicatorPadding:padding];
+    [pollfishParams indicatorPosition:pos];   
+    [pollfishParams releaseMode:releaseMode];
+    [pollfishParams offerwallMode:offerwallMode];
+    [pollfishParams rewardMode:rewardMode];
+    [pollfishParams requestUUID:requestUUID];
+    [pollfishParams platform:PlatformCordova];
+
+    UserProperties *userProperties = [[UserProperties alloc] init];
     
-    
-    PollfishParams *pollfishParams =  [PollfishParams initWith:^(PollfishParams *pollfishParams) {
-        
-        pollfishParams.indicatorPosition=pos;
-        pollfishParams.indicatorPadding=padding;
-        pollfishParams.releaseMode= releaseMode;
-        pollfishParams.offerwallMode= offerwallMode;
-        pollfishParams.rewardMode=rewardMode;
-        pollfishParams.requestUUID=requestUUID;
-        pollfishParams.userAttributes=userAttributesDict;
+    [userAttributesDict enumerateKeysAndObjectsUsingBlock:^(id key, id object, BOOL *stop) {
+        [userProperties customAttribute:object forKey:key];
     }];
+
+    [pollfishParams userProperties:userProperties];
     
-    [Pollfish initWithAPIKey:appKey andParams:pollfishParams];
+    [Pollfish initWith:pollfishParams delegate:self];
 }
 
 - (void) show:(CDVInvokedUrlCommand*)command
@@ -84,60 +90,59 @@ static NSString* onPollfishClosed = nil;
     [Pollfish show];
 }
 
-- (void) hide:(CDVInvokedUrlCommand*)command{
-    
+- (void) hide:(CDVInvokedUrlCommand*)command
+{
     NSLog(@"hide manually called");
     
     [Pollfish hide];
 }
 
-- (void)surveyOpened:(NSNotification *)notification
+- (void) pollfishOpened
 {
     NSLog(@"surveyOpened notification");
     
-    if(onPollfishOpened != nil) {
+    if (onPollfishOpened != nil) {
         
         CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:YES];
         
         [self.commandDelegate sendPluginResult:pluginResult callbackId:onPollfishOpened];
         
-    }else{
+    } else {
         
         NSLog(@"surveyOpened notification not set");
     }
 }
 
-- (void)surveyClosed:(NSNotification *)notification
+- (void) pollfishClosed
 {
     NSLog(@"surveyClosed notification");
     
-    if(onPollfishClosed != nil) {
+    if (onPollfishClosed != nil) {
         
         CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:YES];
         
         [self.commandDelegate sendPluginResult:pluginResult callbackId:onPollfishClosed];
         
-    }else{
+    } else {
         
         NSLog(@"surveyClosed notification not set");
     }
 }
 
-- (void)surveyReceived:(NSNotification *)notification
+- (void) pollfishSurveyReceivedWithSurveyInfo:(SurveyInfo *)surveyInfo
 {
     NSLog(@"surveyReceived notification");
     
-    if(onPollfishSurveyReceived != nil) {
+    if (onPollfishSurveyReceived != nil) {
         
-        int surveyPrice = [[[notification userInfo] valueForKey:@"survey_cpa"] intValue];
-    	int surveyIR = [[[notification userInfo] valueForKey:@"survey_ir"] intValue];
-    	int surveyLOI = [[[notification userInfo] valueForKey:@"survey_loi"] intValue];
-    
-    	NSString *surveyClass =[[notification userInfo] valueForKey:@"survey_class"];
-  
-        NSString *rewardName = [[notification userInfo] valueForKey:@"reward_name"];
-    
-      	int rewardValue = [[[notification userInfo] valueForKey:@"reward_value"] intValue];
+        int surveyPrice = [[surveyInfo cpa] intValue];
+        int surveyIR = [[surveyInfo ir] intValue];
+        int surveyLOI = [[surveyInfo loi] intValue];
+        
+        NSString *surveyClass = [surveyInfo surveyClass];
+        
+        NSString *rewardName = [surveyInfo rewardName];
+        int rewardValue = [[surveyInfo rewardValue] intValue];
     
    		NSLog(@"Pollfish: Survey Received - SurveyPrice:%d andSurveyIR: %d andSurveyLOI:%d andSurveyClass:%@ andRewardName:%@ andRewardValue:%d", surveyPrice,surveyIR, surveyLOI, surveyClass, rewardName, rewardValue);
         
@@ -151,30 +156,26 @@ static NSString* onPollfishClosed = nil;
         
         [self.commandDelegate sendPluginResult:pluginResult callbackId:onPollfishSurveyReceived];
         
-    }else{
+    } else {
         
         NSLog(@"surveyReceived notification not set");
     }
-    
 }
 
-- (void)surveyCompleted:(NSNotification *)notification
+- (void) pollfishSurveyCompletedWithSurveyInfo:(SurveyInfo *)surveyInfo
 {
     NSLog(@"surveyCompleted notification");
     
-    if(onPollfishSurveyCompleted != nil) {
-        
+    if (onPollfishSurveyCompleted != nil) {
        
-        int surveyPrice = [[[notification userInfo] valueForKey:@"survey_cpa"] intValue];
-    	int surveyIR = [[[notification userInfo] valueForKey:@"survey_ir"] intValue];
-    	int surveyLOI = [[[notification userInfo] valueForKey:@"survey_loi"] intValue];
-    
-    	NSString *surveyClass =[[notification userInfo] valueForKey:@"survey_class"];
-  		NSString *rewardName = [[notification userInfo] valueForKey:@"reward_name"];
-    
-      	int rewardValue = [[[notification userInfo] valueForKey:@"reward_value"] intValue];
-    
-   		
+        int surveyPrice = [[surveyInfo cpa] intValue];
+        int surveyIR = [[surveyInfo ir] intValue];
+        int surveyLOI = [[surveyInfo loi] intValue];
+        
+        NSString *surveyClass = [surveyInfo surveyClass];
+        
+        NSString *rewardName = [surveyInfo rewardName];
+        int rewardValue = [[surveyInfo rewardValue] intValue];
         
    		NSLog(@"Pollfish: Survey Completed - SurveyPrice:%d andSurveyIR: %d andSurveyLOI:%d andSurveyClass:%@ andRewardName:%@ andRewardValue:%d", surveyPrice,surveyIR, surveyLOI, surveyClass, rewardName, rewardValue);
         
@@ -189,58 +190,58 @@ static NSString* onPollfishClosed = nil;
         
         [self.commandDelegate sendPluginResult:pluginResult callbackId:onPollfishSurveyCompleted];
         
-    }else{
+    } else {
         
         NSLog(@"onPollfishSurveyCompleted notification not set");
     }
 }
 
-- (void)userNotEligible:(NSNotification *)notification
+- (void) pollfishUsernotEligible
 {
     NSLog(@"userNotEligible notification");
     
-    if(onPollfishUserNotEligible != nil) {
-        
+    if (onPollfishUserNotEligible != nil) {
         CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:YES];
         
         [self.commandDelegate sendPluginResult:pluginResult callbackId:onPollfishUserNotEligible];
-    }else{
-        
+    } else { 
+
         NSLog(@"userNotEligible notification not set");
+
     }
 }
 
-- (void)userRejectedSurvey:(NSNotification *)notification
+- (void) pollfishUserRejectedSurvey
 {
     NSLog(@"userRejectedSurvey notification");
     
-    if(onPollfishUserRejectedSurvey != nil) {
-        
+    if (onPollfishUserRejectedSurvey != nil) {
         CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:YES];
         
         [self.commandDelegate sendPluginResult:pluginResult callbackId:onPollfishUserRejectedSurvey];
-    }else{
-        
+    } else {
+
         NSLog(@"userRejectedSurvey notification not set");
+    
     }
 }
 
-- (void)surveyNotAvailable:(NSNotification *)notification
+- (void) pollfishNotAvailable
 {
     NSLog(@"surveyNotAvailable notification");
     
-    if(onPollfishSurveyNotAvailable != nil) {
+    if (onPollfishSurveyNotAvailable != nil) {
         
         CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:YES];
         
         [self.commandDelegate sendPluginResult:pluginResult callbackId:onPollfishSurveyNotAvailable];
         
-    }else{
-        
+    } else {
+
         NSLog(@"onPollfishSurveyNotAvailable notification not set");
+
     }
 }
-
 
 - (void) setEventCallback:(CDVInvokedUrlCommand*)command{
     
@@ -251,71 +252,45 @@ static NSString* onPollfishClosed = nil;
     
     NSLog(@"eventName: %@",eventName);
     
-    if([@"onPollfishSurveyReceived" isEqualToString:eventName]) {
+    if ([@"onPollfishSurveyReceived" isEqualToString:eventName]) {
         
         NSLog(@"Pollfish onPollfishSurveyReceived set");
         
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(surveyReceived:)
-                                                     name:@"PollfishSurveyReceived" object:nil];
-        
         onPollfishSurveyReceived = command.callbackId;
         
-    }else if ([@"onPollfishSurveyNotAvailable" isEqualToString:eventName]) {
+    } else if ([@"onPollfishSurveyNotAvailable" isEqualToString:eventName]) {
         
         NSLog(@"Pollfish onPollfishSurveyNotAvailable set");
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(surveyNotAvailable:)
-                                                     name:@"PollfishSurveyNotAvailable" object:nil];
-        
         onPollfishSurveyNotAvailable = command.callbackId;
         
-    }else if ([@"onPollfishSurveyCompleted" isEqualToString:eventName]) {
+    } else if ([@"onPollfishSurveyCompleted" isEqualToString:eventName]) {
         
         NSLog(@"Pollfish onPollfishSurveyCompleted set");
         
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(surveyCompleted:)
-                                                     name:@"PollfishSurveyCompleted" object:nil];
-        
         onPollfishSurveyCompleted = command.callbackId;
         
-    }else if ([@"onPollfishUserNotEligible" isEqualToString:eventName]) {
+    } else if ([@"onPollfishUserNotEligible" isEqualToString:eventName]) {
         
         NSLog(@"Pollfish onPollfishUs1erNotEligible set");
         
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userNotEligible:)
-                                                     name:@"PollfishUserNotEligible" object:nil];
-        
         onPollfishUserNotEligible = command.callbackId;
         
-    }else if ([@"onPollfishUserRejectedSurvey" isEqualToString:eventName]) {
+    } else if ([@"onPollfishUserRejectedSurvey" isEqualToString:eventName]) {
         
         NSLog(@"Pollfish onPollfishUserRejectedSurvey set");
         
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userRejectedSurvey:)
-                                                     name:@"PollfishUserRejectedSurvey" object:nil];
-        
         onPollfishUserRejectedSurvey = command.callbackId;
         
-    }else if ([@"onPollfishOpened" isEqualToString:eventName]) {
+    } else if ([@"onPollfishOpened" isEqualToString:eventName]) {
         
         NSLog(@"Pollfish onPollfishOpened set");
-        
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(surveyOpened:)
-                                                     name:@"PollfishOpened" object:nil];
-        
+       
         onPollfishOpened = command.callbackId;
         
-    }else if ([@"onPollfishClosed" isEqualToString:eventName]) {
+    } else if ([@"onPollfishClosed" isEqualToString:eventName]) {
         
         NSLog(@"Pollfish onPollfishClosed set");
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(surveyClosed:)
-                                                     name:@"PollfishClosed" object:nil];
         
         onPollfishClosed = command.callbackId;
     }

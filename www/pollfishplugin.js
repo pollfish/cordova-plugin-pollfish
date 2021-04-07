@@ -12,9 +12,9 @@ module.exports = {
      * @param request_uuid
      * @param offerwallMode
      */
-    init: function(releaseMode, rewardMode, apiKey,position,indPadding,request_uuid, offerwallMode) {
+    init: function(releaseMode, rewardMode, apiKey, position, indPadding, request_uuid, offerwallMode) {
         
-        cordova.exec (undefined, undefined, "PollfishPlugin", "init", [releaseMode, rewardMode, apiKey, position, indPadding,request_uuid, offerwallMode]);
+        cordova.exec (undefined, undefined, "PollfishPlugin", "init", [releaseMode, rewardMode, apiKey, position, indPadding, request_uuid, offerwallMode]);
         
     },
     
@@ -29,9 +29,9 @@ module.exports = {
      * @param offerwallMode
      * @param userAttributes
      */
-    initWithUserAttributes: function(releaseMode, rewardMode, apiKey,position,indPadding,request_uuid, offerwallMode, userAttributes) {
-        
-        cordova.exec (undefined, undefined, "PollfishPlugin", "init", [releaseMode, rewardMode, apiKey, position, indPadding,request_uuid, offerwallMode, userAttributes]);
+    initWithUserAttributes: function(releaseMode, rewardMode, apiKey, position, indPadding, request_uuid, offerwallMode, userAttributes) {
+    
+        cordova.exec (undefined, undefined, "PollfishPlugin", "init", [releaseMode, rewardMode, apiKey, position, indPadding, request_uuid, offerwallMode, userAttributes]);
         
     },
     
@@ -50,9 +50,7 @@ module.exports = {
      */
     
     hidePollfish: function() {
-        
         cordova.exec (undefined, undefined, "PollfishPlugin", "hide",[]);
-        
     },
     
     /**
@@ -61,7 +59,7 @@ module.exports = {
      * @param callbackFunction
      */
     
-    setEventCallback: function (eventName,callbackFunction) {
+    setEventCallback: function (eventName, callbackFunction) {
         cordova.exec (callbackFunction, undefined, "PollfishPlugin", "setEventCallback", [eventName])
     },
     
@@ -70,20 +68,17 @@ module.exports = {
      * @param map
      */
     
-    setAttributesMap: function (map) {
-        
+    setAttributesMap: function (map) { 
         cordova.exec (undefined, undefined, "PollfishPlugin", "setAttributesMap", [map])
     },
     
-    
     Position: {
         TOP_LEFT : 0,
-        BOTTOM_LEFT : 1,
-        TOP_RIGHT : 2,
-        BOTTOM_RIGHT : 3,
-        MIDDLE_LEFT :4,
-        MIDDLE_RIGHT : 5
+        MIDDLE_LEFT : 1,
+        BOTTOM_LEFT : 2,
+        TOP_RIGHT : 3,
+        MIDDLE_RIGHT :4,
+        BOTTOM_RIGHT : 5
     }
-
     
 };

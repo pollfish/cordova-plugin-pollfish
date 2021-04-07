@@ -1,7 +1,7 @@
 #import <Cordova/CDV.h>
 #import <Pollfish/Pollfish.h>
 
-@interface PollfishPlugin : CDVPlugin
+@interface PollfishPlugin : CDVPlugin<PollfishDelegate>
 
 - (void) init:(CDVInvokedUrlCommand*)command;
 - (void) show:(CDVInvokedUrlCommand*)command;

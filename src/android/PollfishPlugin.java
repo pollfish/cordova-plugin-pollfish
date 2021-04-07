@@ -1,23 +1,10 @@
 package com.pollfish.cordova;
 
-/**
- * Created by Pollfish on 4/27/15.
- */
-
 import android.util.Log;
 
-import com.pollfish.constants.Position;
-import com.pollfish.interfaces.PollfishClosedListener;
-import com.pollfish.interfaces.PollfishOpenedListener;
-import com.pollfish.interfaces.PollfishCompletedSurveyListener;
-import com.pollfish.interfaces.PollfishSurveyNotAvailableListener;
-import com.pollfish.interfaces.PollfishReceivedSurveyListener;
-import com.pollfish.interfaces.PollfishUserNotEligibleListener;
-import com.pollfish.interfaces.PollfishUserRejectedSurveyListener;
-import com.pollfish.constants.UserProperties;
-import com.pollfish.main.PollFish;
-import com.pollfish.classes.SurveyInfo;
-import com.pollfish.main.PollFish.ParamsBuilder;
+import com.pollfish.builder.*;
+import com.pollfish.callback.*;
+import com.pollfish.Pollfish;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
@@ -42,17 +29,15 @@ public class PollfishPlugin extends CordovaPlugin {
     private static final String SET_ATTRIBUTES_MAP_POLLFISH = "setAttributesMap";
     private static final String SET_EVENTS_POLLFISH = "setEventCallback";
     
-    
     // Pollfish listeners
     
-    private CallbackContext onPollfishSurveyReceived=null;
-    private CallbackContext onPollfishSurveyCompleted =null;
-    private CallbackContext onPollfishSurveyNotAvailable=null;
-    private CallbackContext onPollfishUserNotEligible=null;
-    private CallbackContext onPollfishUserRejectedSurvey=null;
-    private CallbackContext onPollfishOpened=null;
-    private CallbackContext onPollfishClosed=null;
-    
+    private CallbackContext onPollfishSurveyReceived = null;
+    private CallbackContext onPollfishSurveyCompleted = null;
+    private CallbackContext onPollfishSurveyNotAvailable = null;
+    private CallbackContext onPollfishUserNotEligible = null;
+    private CallbackContext onPollfishUserRejectedSurvey = null;
+    private CallbackContext onPollfishOpened = null;
+    private CallbackContext onPollfishClosed = null;
     
     @Override
     public void onResume(boolean multitasking) {
@@ -70,61 +55,55 @@ public class PollfishPlugin extends CordovaPlugin {
     @Override
     public boolean execute(String action, final JSONArray pollfishParams, CallbackContext callbackContext) throws JSONException {
         
-        Log.d(TAG, "action: "+ action);
-        Log.d(TAG, "Number of Pollfish params: "+ pollfishParams.length());
+        Log.d(TAG, "action: " + action);
+        Log.d(TAG, "Number of Pollfish params: " + pollfishParams.length());
 
         if (action.equals(INIT_POLLFISH))  {
 
-            final String curAction=action;
+            final String curAction = action;
             
             final boolean releaseMode = pollfishParams.getBoolean(0);
             final boolean rewardMode = pollfishParams.getBoolean(1);
-            
             final String apiKey = pollfishParams.getString(2);
-            final int positionInt =pollfishParams.getInt(3);
-            final int indPadding=pollfishParams.getInt(4);
+            final Position position = getPollfishIndicatorPosition(pollfishParams.getInt(3));
+            final int indPadding = pollfishParams.getInt(4);
             
-            String request_uuid_temp =null;
+            String request_uuid_temp = null;
             
-            if(pollfishParams.length()>=6) {
-                request_uuid_temp  =pollfishParams.getString(5);
+            if(pollfishParams.length() >= 6) {
+                request_uuid_temp = pollfishParams.getString(5);
             }
                      
-            boolean offerwallMode_temp =false;
+            boolean offerwallMode_temp = false;
         
             if(pollfishParams.length()>=7) {
                 offerwallMode_temp  = pollfishParams.getBoolean(6);
             }
        
-             JSONObject mapObject_temp = null;
-             UserProperties userProperties_temp=null;
+            JSONObject mapObject_temp = null;
+            UserProperties.Builder userProperties_temp = null;
              
-             if(pollfishParams.length()>=8) {
+            if(pollfishParams.length() >= 8) {
                
-               mapObject_temp  = pollfishParams.optJSONObject(7);
+                mapObject_temp = pollfishParams.optJSONObject(7);
             
-     		   userProperties_temp = new UserProperties();
+     		    userProperties_temp = new UserProperties.Builder();
                     
-               
                 Iterator<?> keys = mapObject_temp.keys();
                     
-                while (keys.hasNext()) {
+                while (keys.hasNext()) { 
+                    try {
+                        String key = (String) keys.next();
+                        String value = mapObject_temp.getString(key);
                         
-                        try {
-                            String key = (String) keys.next();
-                            String value = mapObject_temp.getString(key);
-                            
-                            Log.d(TAG, "Attribute with key: " + key + " and value: " + value);
-                            
-                            
-                            userProperties_temp.setCustomAttributes(key, value);
-                            
-                        }catch (JSONException e){
-                            
-                            Log.e(TAG, "Exception while iterating in map dictionary: " + e);
-                            
-                        }
+                        Log.d(TAG, "Attribute with key: " + key + " and value: " + value);
                         
+                        userProperties_temp.customAttribute(key, value); 
+                    } catch (JSONException e) {
+                        
+                        Log.e(TAG, "Exception while iterating in map dictionary: " + e);
+                        
+                    }
                 }
             }
 
@@ -132,42 +111,44 @@ public class PollfishPlugin extends CordovaPlugin {
             final String request_uuid = request_uuid_temp;
             final boolean offerwallMode = offerwallMode_temp;
             final JSONObject mapObject = mapObject_temp;
-            final UserProperties userProperties =  userProperties_temp;
+
+            UserProperties userProperties = null;
+
+            if (userProperties_temp != null) {
+                userProperties = userProperties_temp.build();
+            }
             
-            Log.d(TAG, "releaseMode: "+ releaseMode);
-            Log.d(TAG, "rewardMode: "+ rewardMode);
-            Log.d(TAG, "apiKey: "+ apiKey);
-            Log.d(TAG, "position: "+ positionInt);
-            Log.d(TAG, "indPadding: "+ indPadding);
-            Log.d(TAG, "request_uuid: "+ request_uuid);
-            Log.d(TAG, "offerwallMode: "+ offerwallMode);
+            Log.d(TAG, "releaseMode: " + releaseMode);
+            Log.d(TAG, "rewardMode: " + rewardMode);
+            Log.d(TAG, "apiKey: " + apiKey);
+            Log.d(TAG, "position: " + position);
+            Log.d(TAG, "indPadding: " + indPadding);
+            Log.d(TAG, "request_uuid: " + request_uuid);
+            Log.d(TAG, "offerwallMode: " + offerwallMode);
             
-            final PollfishReceivedSurveyListener pollfishReceivedSurveyListener = new PollfishReceivedSurveyListener() {
+            final PollfishSurveyReceivedListener pollfishSurveyReceivedListener = new PollfishSurveyReceivedListener() {
                 
                 @Override
                 public void onPollfishSurveyReceived(SurveyInfo surveyInfo) {
         
-        
-        		
-                    if(onPollfishSurveyReceived!=null) {
-                        
+                    if(onPollfishSurveyReceived != null) {
                         
                         JSONObject json_object = new JSONObject();
                         
                         try {
                         
-                        if(surveyInfo!=null){
-                            
-                        	Log.d(TAG, "Pollfish onPollfishSurveyReceived :: CPA: " + surveyInfo.getSurveyCPA()+ " SurveyClass: " + surveyInfo.getSurveyClass() + " LOI: " + surveyInfo.getSurveyLOI() + " IR: " + surveyInfo.getSurveyIR());
-   
-                            json_object.put("survey_cpa", surveyInfo.getSurveyCPA());
-               				json_object.put("survey_ir", surveyInfo.getSurveyIR());
-               				json_object.put("survey_loi", surveyInfo.getSurveyLOI());
-               				json_object.put("survey_class", surveyInfo.getSurveyClass());
-               				json_object.put("reward_name", surveyInfo.getRewardName());
-               				json_object.put("reward_value", surveyInfo.getRewardValue());
-               				
-               				}
+                            if(surveyInfo != null){
+                                
+                                Log.d(TAG, "Pollfish onPollfishSurveyReceived :: CPA: " + surveyInfo.getSurveyCPA()+ " SurveyClass: " + surveyInfo.getSurveyClass() + " LOI: " + surveyInfo.getSurveyLOI() + " IR: " + surveyInfo.getSurveyIR());
+    
+                                json_object.put("survey_cpa", surveyInfo.getSurveyCPA());
+                                json_object.put("survey_ir", surveyInfo.getSurveyIR());
+                                json_object.put("survey_loi", surveyInfo.getSurveyLOI());
+                                json_object.put("survey_class", surveyInfo.getSurveyClass());
+                                json_object.put("reward_name", surveyInfo.getRewardName());
+                                json_object.put("reward_value", surveyInfo.getRewardValue());
+                                
+                            }
                             
                         } catch (JSONException exception) {
                             
@@ -184,7 +165,7 @@ public class PollfishPlugin extends CordovaPlugin {
                 }
             };
             
-            final PollfishCompletedSurveyListener pollfishCompletedSurveyListener = new PollfishCompletedSurveyListener() {
+            final PollfishSurveyCompletedListener pollfishSurveyCompletedListener = new PollfishSurveyCompletedListener() {
                 
                 @Override
                 public void onPollfishSurveyCompleted(SurveyInfo surveyInfo) {
@@ -199,15 +180,15 @@ public class PollfishPlugin extends CordovaPlugin {
                            if(surveyInfo!=null){
                                        
                                        
-                            Log.d(TAG, "Pollfish onPollfishSurveyCompleted :: CPA: " + surveyInfo.getSurveyCPA()+ " SurveyClass: " + surveyInfo.getSurveyClass() + " LOI: " + surveyInfo.getSurveyLOI() + " IR: " + surveyInfo.getSurveyIR());
-   
-   
-                       		json_object.put("survey_cpa", surveyInfo.getSurveyCPA());
-               				json_object.put("survey_ir", surveyInfo.getSurveyIR());
-               				json_object.put("survey_loi", surveyInfo.getSurveyLOI());
-               				json_object.put("survey_class", surveyInfo.getSurveyClass());
-               				json_object.put("reward_name", surveyInfo.getRewardName());
-               				json_object.put("reward_value", surveyInfo.getRewardValue());
+                                Log.d(TAG, "Pollfish onPollfishSurveyCompleted :: CPA: " + surveyInfo.getSurveyCPA()+ " SurveyClass: " + surveyInfo.getSurveyClass() + " LOI: " + surveyInfo.getSurveyLOI() + " IR: " + surveyInfo.getSurveyIR());
+    
+    
+                                json_object.put("survey_cpa", surveyInfo.getSurveyCPA());
+                                json_object.put("survey_ir", surveyInfo.getSurveyIR());
+                                json_object.put("survey_loi", surveyInfo.getSurveyLOI());
+                                json_object.put("survey_class", surveyInfo.getSurveyClass());
+                                json_object.put("reward_name", surveyInfo.getRewardName());
+                                json_object.put("reward_value", surveyInfo.getRewardValue());
                				}
                             
                         } catch (JSONException exception) {
@@ -280,8 +261,6 @@ public class PollfishPlugin extends CordovaPlugin {
                     Log.d(TAG, "onUserNotEeligible");
                     
                     if(onPollfishUserNotEligible!=null) {
-                        
-                        
                         PluginResult result = new PluginResult(PluginResult.Status.OK);
                         result.setKeepCallback(true);
                         onPollfishUserNotEligible.sendPluginResult(result);
@@ -295,48 +274,39 @@ public class PollfishPlugin extends CordovaPlugin {
                     Log.d(TAG, "onUserRejectedSurvey");
                     
                     if(onPollfishUserRejectedSurvey!=null) {
-                        
-                        
                         PluginResult result = new PluginResult(PluginResult.Status.OK);
                         result.setKeepCallback(true);
                         onPollfishUserRejectedSurvey.sendPluginResult(result);
                     }
                 }
-            };
+            };            
             
-            final Position position = Position.values()[positionInt];
-            
-            
-            cordova.getActivity().runOnUiThread(new Runnable() {
+            Params.Builder paramsBuilder = new Params.Builder(apiKey)
+                .indicatorPadding(indPadding)
+                .indicatorPosition(position)
+                .rewardMode(rewardMode)
+                .releaseMode(releaseMode)
+                .pollfishOpenedListener(pollfishOpenedListener)
+                .pollfishUserRejectedSurveyListener(pollfishUserRejectedSurveyListener)
+                .pollfishClosedListener(pollfishClosedListener)
+                .pollfishSurveyCompletedListener(pollfishSurveyCompletedListener)
+                .pollfishSurveyNotAvailableListener(pollfishSurveyNotAvailableListener)
+                .pollfishSurveyReceivedListener(pollfishSurveyReceivedListener)
+                .pollfishUserNotEligibleListener(pollfishUserNotEligibleListener)
+                .requestUUID(request_uuid)
+                .offerwallMode(offerwallMode);
+
+            if (userProperties != null) {
+                paramsBuilder.userProperties(userProperties);
+            }
                 
-                @Override
-                public void run() {
-    
-                        ParamsBuilder paramsBuilder = new ParamsBuilder(apiKey)
-                        .indicatorPadding(indPadding)
-                        .indicatorPosition(position)
-                        .rewardMode(rewardMode)
-                        .releaseMode(releaseMode)
-                        .pollfishOpenedListener(pollfishOpenedListener)
-                        .pollfishUserRejectedSurveyListener(pollfishUserRejectedSurveyListener)
-                        .pollfishClosedListener(pollfishClosedListener)
-                        .pollfishCompletedSurveyListener(pollfishCompletedSurveyListener)
-                        .pollfishSurveyNotAvailableListener(pollfishSurveyNotAvailableListener)
-                        .pollfishReceivedSurveyListener(pollfishReceivedSurveyListener)
-                        .pollfishUserNotEligibleListener(pollfishUserNotEligibleListener)
-                        .requestUUID(request_uuid)
-                        .offerWallMode(offerwallMode)
-                        .userProperties(userProperties)
-                        .build();
+            Params params = paramsBuilder.build();
 
-
-                	PollFish.initWith(cordova.getActivity(), paramsBuilder);
-                	}
-            });
+            Pollfish.initWith(cordova.getActivity(), params);
             
             return true;
             
-        }else if(action.equals(SHOW_POLLFISH)){
+        } else if (action.equals(SHOW_POLLFISH)) {
             
             Log.d(TAG, "show Pollfish");
             
@@ -345,11 +315,11 @@ public class PollfishPlugin extends CordovaPlugin {
                 @Override
                 public void run() {
                     
-                    PollFish.show();
+                    Pollfish.show();
                 }
             });
             
-        }else if(action.equals(HIDE_POLLFISH)){
+        } else if (action.equals(HIDE_POLLFISH)) {
             
             Log.d(TAG, "hide Pollfish");
             
@@ -359,13 +329,11 @@ public class PollfishPlugin extends CordovaPlugin {
                 @Override
                 public void run() {
                     
-                    PollFish.hide();
+                    Pollfish.hide();
                 }
-            });
+            }); 
             
-            
-            
-        }else if(action.equals(SET_EVENTS_POLLFISH)) {
+        } else if (action.equals(SET_EVENTS_POLLFISH)) {
             
             Log.d(TAG, "set event listeners");
             
@@ -374,65 +342,64 @@ public class PollfishPlugin extends CordovaPlugin {
             setEventCallback(eventName,callbackContext);
         }
         
-        
         return true;
     }
     
     
-    private void setEventCallback (String eventName,CallbackContext callbackFunction) {
+    private void setEventCallback(String eventName, CallbackContext callbackFunction) {
         
         Log.d ("Pollfish", "setEventCallback name: " + eventName);
         
-        if("onPollfishSurveyReceived".equals(eventName)) {
+        if ("onPollfishSurveyReceived".equals(eventName)) {
             
             Log.d ("Pollfish", "onPollfishSurveyReceived set");
             
             onPollfishSurveyReceived = callbackFunction;
             
-        }else if ("onPollfishSurveyNotAvailable".equals(eventName)) {
+        } else if ("onPollfishSurveyNotAvailable".equals(eventName)) {
             
-            onPollfishSurveyNotAvailable= callbackFunction;
+            onPollfishSurveyNotAvailable = callbackFunction;
             
-        }else if ("onPollfishSurveyCompleted".equals(eventName)) {
+        } else if ("onPollfishSurveyCompleted".equals(eventName)) {
             
             onPollfishSurveyCompleted = callbackFunction;
             
-        }else if ("onPollfishUserNotEligible".equals(eventName)) {
+        } else if ("onPollfishUserNotEligible".equals(eventName)) {
             
-            onPollfishUserNotEligible= callbackFunction;
+            onPollfishUserNotEligible = callbackFunction;
             
-        }else if ("onPollfishUserRejectedSurvey".equals(eventName)) {
+        } else if ("onPollfishUserRejectedSurvey".equals(eventName)) {
             
-            onPollfishUserRejectedSurvey= callbackFunction;
+            onPollfishUserRejectedSurvey = callbackFunction;
             
-        }else if ("onPollfishOpened".equals(eventName)) {
+        } else if ("onPollfishOpened".equals(eventName)) {
             
             onPollfishOpened = callbackFunction;
             
-        }else if ("onPollfishClosed".equals(eventName)) {
+        } else if ("onPollfishClosed".equals(eventName)) {
             
-            onPollfishClosed= callbackFunction;
+            onPollfishClosed = callbackFunction;
         }
     }
     
-    public Position getPollfishIndicatorPosition(String positionStr) {
+    public Position getPollfishIndicatorPosition(int positionInt) {
         
         Position indPosition;
         
-        if(positionStr.equals("TOP_LEFT")){
+        if (positionInt == 0) {
             indPosition = Position.TOP_LEFT;
-        }else if(positionStr.equals("MIDDLE_LEFT")){
-            indPosition=Position.MIDDLE_LEFT;
-        }else if(positionStr.equals("BOTTOM_LEFT")){
+        } else if (positionInt == 2) {
             indPosition=Position.BOTTOM_LEFT;
-        }else if(positionStr.equals("TOP_RIGHT")){
-            indPosition=Position.TOP_RIGHT;
-        }else if(positionStr.equals("MIDDLE_RIGHT")){
+        } else if (positionInt == 4) {
             indPosition=Position.MIDDLE_RIGHT;
-        }else if(positionStr.equals("BOTTOM_RIGHT")) {
+        } else if (positionInt == 1) {
+            indPosition=Position.MIDDLE_LEFT;
+        }else if (positionInt == 3) {
+            indPosition=Position.TOP_RIGHT;
+        } else if (positionInt == 5) {
             indPosition = Position.BOTTOM_RIGHT;
-        }else{
-            indPosition=Position.BOTTOM_RIGHT;
+        } else {
+            indPosition=Position.TOP_LEFT;
         }
         
         return indPosition;

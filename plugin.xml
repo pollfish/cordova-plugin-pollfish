@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
     id="com.pollfish.cordova"
-    version="1.1.3">
-    
+    version="1.2.0">
     
     <name>PollfishPlugin</name>
     <description>Pollfish Cordova/PhoneGap plugin</description>
@@ -22,6 +21,10 @@
     <!-- android -->
     
     <platform name="android">
+
+        <config-file target="config.xml" parent="/*">
+            <preference name="AndroidXEnabled" value="true" />
+        </config-file>
         
         <config-file target="res/xml/config.xml" parent="/*">
             
@@ -31,9 +34,7 @@
             
         </config-file>
         
-        <framework src="com.google.android.gms:play-services-ads-identifier:16.0.0" />
-        <framework src="com.google.android.gms:play-services-base:16.0.1" />
- 		<framework src="com.pollfish:pollfish:+:googleplayRelease@aar" />
+ 		<framework src="com.pollfish:pollfish-googleplay:6.0.0" />
         
     	<source-file src="src/android/PollfishPlugin.java" target-dir="src/com/pollfish/cordova" />
         
@@ -50,7 +51,7 @@
       <config-file target="config.xml" parent="/widget">
             <feature name="PollfishPlugin">
                 <param name="ios-package" value="PollfishPlugin" />
-                 <param name="onload" value="true" />
+                <param name="onload" value="true" />
             </feature>
         </config-file>
         
@@ -59,15 +60,13 @@
                 <source url="https://cdn.cocoapods.org/"/>
             </config>
             <pods use-frameworks="true">
-                <pod name="Pollfish" spec="5.5.2"/>
+                <pod name="Pollfish" spec="6.0.0"/>
             </pods>
         </podspec>
-        
         
         <header-file src="src/ios/PollfishPlugin.h" target-dir="PollfishPlugin"/>
         <source-file src="src/ios/PollfishPlugin.m" target-dir="PollfishPlugin"/>
         
     </platform>
-    
     
 </plugin>
