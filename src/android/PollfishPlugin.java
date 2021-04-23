@@ -54,7 +54,12 @@ public class PollfishPlugin extends CordovaPlugin {
      */
     @Override
     public boolean execute(String action, final JSONArray pollfishParams, CallbackContext callbackContext) throws JSONException {
-        
+
+        if (android.os.Build.VERSION.SDK_INT < 21) {
+            Log.d(TAG, "Pollfish surveys will not run on targets lower than 21");
+            return true;
+        }
+
         Log.d(TAG, "action: " + action);
         Log.d(TAG, "Number of Pollfish params: " + pollfishParams.length());
 
@@ -286,6 +291,7 @@ public class PollfishPlugin extends CordovaPlugin {
                 .indicatorPosition(position)
                 .rewardMode(rewardMode)
                 .releaseMode(releaseMode)
+                .platform(Platform.CORDOVA)
                 .pollfishOpenedListener(pollfishOpenedListener)
                 .pollfishUserRejectedSurveyListener(pollfishUserRejectedSurveyListener)
                 .pollfishClosedListener(pollfishClosedListener)
