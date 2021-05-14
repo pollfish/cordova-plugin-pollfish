@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
     id="com.pollfish.cordova"
-    version="1.2.3">
+    version="1.2.4">
     
     <name>PollfishPlugin</name>
     <description>Pollfish Cordova/PhoneGap plugin</description>
@@ -34,7 +34,7 @@
             
         </config-file>
         
- 		<framework src="com.pollfish:pollfish-googleplay:6.1.0" />
+ 		<framework src="com.pollfish:pollfish-googleplay:6.1.1" />
         
     	<source-file src="src/android/PollfishPlugin.java" target-dir="src/com/pollfish/cordova" />
         
