@@ -1,5 +1,5 @@
 #import <Cordova/CDV.h>
-#import <Pollfish/Pollfish.h>
+#import <Pollfish/Pollfish-Swift.h>
 
 @interface PollfishPlugin : CDVPlugin<PollfishDelegate>
 
