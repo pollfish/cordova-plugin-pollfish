@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
     id="com.pollfish.cordova"
-    version="1.2.6">
+    version="1.2.7">
     
     <name>PollfishPlugin</name>
     <description>Pollfish Cordova/PhoneGap plugin</description>
@@ -65,7 +65,7 @@
                 <source url="https://cdn.cocoapods.org/"/>
             </config>
             <pods use-frameworks="true">
-                <pod name="Pollfish" spec="6.0.2"/>
+                <pod name="Pollfish" spec="6.0.3"/>
             </pods>
         </podspec>
         
