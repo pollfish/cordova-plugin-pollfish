@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
     id="com.pollfish.cordova"
-    version="1.2.7">
+    version="1.2.8">
     
     <name>PollfishPlugin</name>
     <description>Pollfish Cordova/PhoneGap plugin</description>
@@ -39,13 +39,8 @@
     	<source-file src="src/android/PollfishPlugin.java" target-dir="src/com/pollfish/cordova" />
         
         <config-file target="AndroidManifest.xml" parent="/manifest">
-            <uses-sdk tools:overrideLibrary="com.pollfish" />
             <uses-permission android:name="android.permission.INTERNET" />
         </config-file>
-        
-        <edit-config file="AndroidManifest.xml" target="/manifest" mode="merge">
-            <manifest xmlns:tools="http://schemas.android.com/tools" />
-        </edit-config>
         
     </platform>
     

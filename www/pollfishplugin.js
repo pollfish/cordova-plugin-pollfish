@@ -9,48 +9,42 @@ module.exports = {
      * @param rewardMode
      * @param apiKey
      * @param position
-     * @param request_uuid
+     * @param requestUUID
      * @param offerwallMode
      */
-    init: function(releaseMode, rewardMode, apiKey, position, indPadding, request_uuid, offerwallMode) {
-        
-        cordova.exec (undefined, undefined, "PollfishPlugin", "init", [releaseMode, rewardMode, apiKey, position, indPadding, request_uuid, offerwallMode]);
-        
+    init: function(releaseMode, rewardMode, apiKey, position, indPadding, requestUUID, offerwallMode) {
+        cordova.exec (undefined, undefined, "PollfishPlugin", "init", [releaseMode, rewardMode, apiKey, position, indPadding, requestUUID, offerwallMode]);
     },
     
     /**
-     * Function to init Pollfish
+     * Function to init Pollfish with user attributes
      *
      * @param releaseMode
      * @param rewardMode
      * @param apiKey
      * @param position
-     * @param request_uuid
+     * @param requestUUID
      * @param offerwallMode
      * @param userAttributes
      */
-    initWithUserAttributes: function(releaseMode, rewardMode, apiKey, position, indPadding, request_uuid, offerwallMode, userAttributes) {
-    
-        cordova.exec (undefined, undefined, "PollfishPlugin", "init", [releaseMode, rewardMode, apiKey, position, indPadding, request_uuid, offerwallMode, userAttributes]);
-        
+    initWithUserAttributes: function(releaseMode, rewardMode, apiKey, position, indPadding, requestUUID, offerwallMode, userAttributes) {
+        cordova.exec (undefined, undefined, "PollfishPlugin", "init", [releaseMode, rewardMode, apiKey, position, indPadding, requestUUID, offerwallMode, userAttributes]);   
     },
     
     /**
-     * Function to manually call show Pollfish
+     * Function to manually show Pollfish
      */
     
     showPollfish: function() {
-        
-        cordova.exec (undefined, undefined, "PollfishPlugin", "show",[]);
-        
+        cordova.exec (undefined, undefined, "PollfishPlugin", "show", []);
     },
     
     /**
-     * Function to manually call hide Pollfish
+     * Function to manually hide Pollfish
      */
     
     hidePollfish: function() {
-        cordova.exec (undefined, undefined, "PollfishPlugin", "hide",[]);
+        cordova.exec (undefined, undefined, "PollfishPlugin", "hide", []);
     },
     
     /**
@@ -71,14 +65,24 @@ module.exports = {
     setAttributesMap: function (map) { 
         cordova.exec (undefined, undefined, "PollfishPlugin", "setAttributesMap", [map])
     },
-    
+
     Position: {
-        TOP_LEFT : 0,
-        MIDDLE_LEFT : 1,
-        BOTTOM_LEFT : 2,
-        TOP_RIGHT : 3,
-        MIDDLE_RIGHT :4,
-        BOTTOM_RIGHT : 5
+        TOP_LEFT: 0,
+        TOP_RIGHT: 1,
+        MIDDLE_LEFT: 2,
+        MIDDLE_RIGHT: 3,
+        BOTTOM_LEFT:4,
+        BOTTOM_RIGHT: 5
+    },
+
+    EventListener: {
+        OnPollfishClosed: 'onPollfishClosed',
+        OnPollfishOpened: 'onPollfishOpened',
+        OnPollfishSurveyReceived: 'onPollfishSurveyReceived',
+        OnPollfishSurveyCompleted: 'onPollfishSurveyCompleted',
+        OnPollfishUserNotEligible: 'onPollfishUserNotEligible',
+        OnPollfishUserRejectedSurvey: 'onPollfishUserRejectedSurvey',
+        OnPollfishSurveyNotAvailable: 'onPollfishSurveyNotAvailable'
     }
     
 };

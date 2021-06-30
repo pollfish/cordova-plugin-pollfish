@@ -174,7 +174,7 @@ You can be notified when a Pollfish survey is received.
 For example:
 
 ```
-pollfishplugin.setEventCallback('onPollfishSurveyReceived',app.surveyReceivedEvent);
+pollfishplugin.setEventCallback(pollfishplugin.EventListener.OnPollfishSurveyReceived, app.surveyReceivedEvent);
 ```
 
 ```
@@ -194,7 +194,7 @@ You can be notified when a Pollfish survey is completed.
 For example:
 
 ```
-pollfishplugin.setEventCallback('onPollfishSurveyCompleted',app.surveyCompletedEvent);
+pollfishplugin.setEventCallback(pollfishplugin.EventListener.OnPollfishSurveyCompleted, app.surveyCompletedEvent);
 ```
 
 ```
@@ -214,7 +214,7 @@ You can be notified when a user is not eligible for a Pollfish survey.
 For example:
 
 ```
-pollfishplugin.setEventCallback('onPollfishUserNotEligible',app.userNotEligibleEvent);
+pollfishplugin.setEventCallback(pollfishplugin.EventListener.OnPollfishUserNotEligible, app.userNotEligibleEvent);
 ```
 
 ```
@@ -230,7 +230,7 @@ You can be notified when a Pollfish survey is not available
 For example:
 
 ```
-pollfishplugin.setEventCallback('onPollfishSurveyNotAvailable',app.surveyNotAvailableEvent);
+pollfishplugin.setEventCallback(pollfishplugin.EventListener.OnPollfishSurveyNotAvailable, app.surveyNotAvailableEvent);
 ```
 
 ```
@@ -246,7 +246,7 @@ You can be notified when Pollfish survey panel is open
 For example:
 
 ```
-pollfishplugin.setEventCallback('onPollfishOpened',app.pollfishPanelOpenEvent);
+pollfishplugin.setEventCallback(pollfishplugin.EventListener.OnPollfishOpened, app.pollfishPanelOpenEvent);
 ```
 
 ```
@@ -262,12 +262,28 @@ You can be notified when Pollfish survey panel is closed
 For example:
 
 ```
-pollfishplugin.setEventCallback('onPollfishOpened',app.pollfishPanelClosedEvent);
+pollfishplugin.setEventCallback(pollfishplugin.EventListener.OnPollfishClosed, app.pollfishPanelClosedEvent);
 ```
 
 ```
 pollfishPanelClosedEvent: function(id) {
  console.log("Pollfish Survey panel is closed");
+}
+```
+
+#### 8.7 Get notified when a user has rejected a survey (optional)
+
+You can be notified when a user has rejected a survey
+
+For example:
+
+```
+pollfishplugin.setEventCallback(pollfishplugin.EventListener.OnPollfishUserRejectedSurvey, app.userRejectedSurveyEvent);
+```
+
+```
+userRejectedSurveyEvent: function(id) {
+ console.log("Pollfish User Rejected Survey");
 }
 ```
 

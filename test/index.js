@@ -17,6 +17,8 @@
  * under the License.
  */
 
+const pollfishplugin = require("../www/pollfishplugin");
+
 var releaseMode;
 var rewardMode;
 var api_key;
@@ -53,13 +55,13 @@ var app = {
 		
         // register to listen to Pollfish events
         
-        pollfishplugin.setEventCallback('onPollfishSurveyReceived', app.surveyReceivedEvent);
-        pollfishplugin.setEventCallback('onPollfishSurveyCompleted', app.surveyCompletedEvent);
-        pollfishplugin.setEventCallback('onPollfishSurveyNotAvailable', app.surveyNotAvailableEvent);
-        pollfishplugin.setEventCallback('onPollfishUserNotEligible', app.userNotEligibleEvent);
-        pollfishplugin.setEventCallback('onPollfishUserRejectedSurvey', app.userRejectedSurveyEvent);    
-        pollfishplugin.setEventCallback('onPollfishOpened', app.pollfishPanelOpenEvent);
-        pollfishplugin.setEventCallback('onPollfishClosed', app.pollfishPanelClosedEvent);
+        pollfishplugin.setEventCallback(pollfishplugin.EventListener.OnPollfishSurveyReceived, app.surveyReceivedEvent);
+        pollfishplugin.setEventCallback(pollfishplugin.EventListener.OnPollfishSurveyCompleted, app.surveyCompletedEvent);
+        pollfishplugin.setEventCallback(pollfishplugin.EventListener.OnPollfishSurveyNotAvailable, app.surveyNotAvailableEvent);
+        pollfishplugin.setEventCallback(pollfishplugin.EventListener.OnPollfishUserNotEligible, app.userNotEligibleEvent);
+        pollfishplugin.setEventCallback(pollfishplugin.EventListener.OnPollfishUserRejectedSurvey, app.userRejectedSurveyEvent);    
+        pollfishplugin.setEventCallback(pollfishplugin.EventListener.OnPollfishOpened, app.pollfishPanelOpenEvent);
+        pollfishplugin.setEventCallback(pollfishplugin.EventListener.OnPollfishClosed, app.pollfishPanelClosedEvent);
     
         // register to listen when app comes to foreground
         

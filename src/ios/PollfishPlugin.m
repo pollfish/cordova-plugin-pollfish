@@ -69,7 +69,11 @@ static NSString* onPollfishClosed = nil;
     [pollfishParams releaseMode:releaseMode];
     [pollfishParams offerwallMode:offerwallMode];
     [pollfishParams rewardMode:rewardMode];
-    [pollfishParams requestUUID:requestUUID];
+    
+    if (requestUUID != [NSNull null]) {
+        [pollfishParams requestUUID:requestUUID];
+    }
+    
     [pollfishParams platform:PlatformCordova];
 
     UserProperties *userProperties = [[UserProperties alloc] init];
