@@ -17,17 +17,14 @@
  * under the License.
  */
 
-const pollfishplugin = require("../www/pollfishplugin");
-
 var releaseMode;
 var rewardMode;
-var api_key;
-var pos;
-var request_uuid;
+var apiKey;
+var position;
+var requestUUID;
 var padding; 
 var offerwallMode; 
-var userAttributes={};
- 
+var userAttributes;
  
 var app = {
 
@@ -38,45 +35,52 @@ var app = {
     bindEvents: function() {
         document.addEventListener('deviceready', this.onDeviceReady, false);
     },
-	
+
 	onDeviceReady: function() {
        
         app.receivedEvent('deviceready'); 
-  		
-  		// initialise Pollfish
-		
-		releaseMode = false;
-		rewardMode = true;
-		api_key = "YOUR_API_KEY";
-		pos = pollfishplugin.Position.TOP_LEFT;
-		padding = 50; 
-		offerwallMode = true;
-		request_uuid = "my_id";
-		
+  	
         // register to listen to Pollfish events
-        
-        pollfishplugin.setEventCallback(pollfishplugin.EventListener.OnPollfishSurveyReceived, app.surveyReceivedEvent);
-        pollfishplugin.setEventCallback(pollfishplugin.EventListener.OnPollfishSurveyCompleted, app.surveyCompletedEvent);
-        pollfishplugin.setEventCallback(pollfishplugin.EventListener.OnPollfishSurveyNotAvailable, app.surveyNotAvailableEvent);
-        pollfishplugin.setEventCallback(pollfishplugin.EventListener.OnPollfishUserNotEligible, app.userNotEligibleEvent);
-        pollfishplugin.setEventCallback(pollfishplugin.EventListener.OnPollfishUserRejectedSurvey, app.userRejectedSurveyEvent);    
-        pollfishplugin.setEventCallback(pollfishplugin.EventListener.OnPollfishOpened, app.pollfishPanelOpenEvent);
-        pollfishplugin.setEventCallback(pollfishplugin.EventListener.OnPollfishClosed, app.pollfishPanelClosedEvent);
+		
+        pollfishplugin.setEventCallback(pollfishplugin.EventListener.OnPollfishSurveyReceived, (result) => {
+			document.getElementById('logger').innerHTML = 'Survey received: ' + JSON.stringify(result);
+			console.log("Survey Received: " + JSON.stringify(result));
+		});
+
+        pollfishplugin.setEventCallback(pollfishplugin.EventListener.OnPollfishSurveyCompleted, (result) => {
+			document.getElementById('logger').innerHTML = 'Survey completed: ' + JSON.stringify(result);
+			console.log("Survey Completed: " + JSON.stringify(result));
+		});
+
+        pollfishplugin.setEventCallback(pollfishplugin.EventListener.OnPollfishSurveyNotAvailable, (_) => {
+			document.getElementById('logger').innerHTML = 'Survey not available';
+			console.log("Pollfish Survey not available");
+		});
+
+        pollfishplugin.setEventCallback(pollfishplugin.EventListener.OnPollfishUserNotEligible, (_) => {
+			document.getElementById('logger').innerHTML = 'User not eligible' + JSON.stringify(result);
+			console.log("Pollfish User Not Eligible");
+		});
+
+        pollfishplugin.setEventCallback(pollfishplugin.EventListener.OnPollfishUserRejectedSurvey, (_) => {
+			document.getElementById('logger').innerHTML = 'User rejected survey';
+			console.log("Pollfish User Rejected Survey");
+		});
+
+        pollfishplugin.setEventCallback(pollfishplugin.EventListener.OnPollfishOpened, (_) => {
+			document.getElementById('logger').innerHTML = 'Panel opened';
+			console.log("Pollfish Survey panel is open");
+		});
+
+        pollfishplugin.setEventCallback(pollfishplugin.EventListener.OnPollfishClosed, (_) => {
+			document.getElementById('logger').innerHTML = 'Panel closed';
+			console.log("Pollfish Survey panel is closed");
+		});
     
         // register to listen when app comes to foreground
         
         document.addEventListener("resume", app.onResume, false);
-        
- 		// sent user attributes 
- 		
-        userAttributes['FacebookID'] = 'My Facebook';
-        userAttributes['LinkedInID'] = 'My LinkedIn';
-               
-        pollfishplugin.initWithUserAttributes(releaseMode, 
-			rewardMode, api_key, pos, padding, request_uuid, offerwallMode, userAttributes); 
- 
-		// manually call show or hide Pollfish
-   
+        		
         document.getElementById('show').addEventListener('click', function() {                                              
 			pollfishplugin.showPollfish();
 		}, false);
@@ -84,76 +88,42 @@ var app = {
         document.getElementById('hide').addEventListener('click', function() {               
         	pollfishplugin.hidePollfish();                                        
 		}, false);
-  
+
+		releaseMode = false;
+		rewardMode = false;
+		apiKey = 'YOUR_API_KEY';
+		position = pollfishplugin.Position.TOP_LEFT;
+		requestUUID = 'my_id';
+		padding = 50; 
+		offerwallMode = true; 
+		userAttributes = {
+			'gender': '1',
+			'education': '1'
+		};
+		
+		pollfishplugin.initWithUserAttributes(
+			releaseMode, 
+			rewardMode,
+			apiKey, 
+			position, 
+			padding, 
+			requestUUID, 
+			offerwallMode, 
+			userAttributes);
     },
     
 	onResume: function () {
-   
    		console.log("PollfishPlugin onResume");
     
- 		pollfishplugin.init(releaseMode,rewardMode,api_key,pos,padding,offerwallMode); 
-	},
-    
-    surveyReceivedEvent: function(id) {
-    
-    	try{   
-    	
-        	console.log("Pollfish Survey Received - CPA: " + id.survey_cpa + " IR: " + id.survey_ir + " LOI: " + id.survey_loi + " Survey Class: " + id.survey_class+ " Reward Name: " + id.reward_name + " Reward Value: " + id.reward_value);
-        
-       	 	document.getElementById('logger').innerHTML = "Survey Received - CPA: " + id.survey_cpa + " IR: " + id.survey_ir+ " LOI: " + id.survey_loi+ " Survey Class: " + id.survey_class + " Reward Name: " + id.reward_name + " Reward Value: " + id.reward_value;
-        
-    	}catch(e){
-        
-    	}
-    
-	},
-    
-	surveyCompletedEvent: function(id) {
-    
-    	try{
-         	console.log("Pollfish Survey Completed - CPA: " + id.survey_cpa + " IR: " + id.survey_ir + " LOI: " + id.survey_loi + " Survey Class: " + id.survey_class + " Reward Name: " + id.reward_name + " Reward Value: " + id.reward_value);
-        
-        	document.getElementById('logger').innerHTML = "Survey Completed - CPA: " + id.survey_cpa + " IR: " + id.survey_ir+ " LOI: " + id.survey_loi+ " Survey Class: " + id.survey_class + " Reward Name: " + id.reward_name + " Reward Value: " + id.reward_value;
-        
-    	}catch(e){
-        
-    	}
-	},
-    
-	surveyNotAvailableEvent: function(id) {
-   
-   		console.log("Pollfish Survey Not Available");
-    
-    	document.getElementById('logger').innerHTML = "Survey Not Available";  
-	},
-    
-	pollfishPanelOpenEvent: function(id) {
-    	
-    	console.log("Pollfish Panel Open");
-    	
-    	document.getElementById('logger').innerHTML = "Panel Open";
-	},
-    
-	userNotEligibleEvent: function(id) {
-    
-    	console.log("Pollfish User Not Eligible");
-    
-    	document.getElementById('logger').innerHTML = "User Not Eligible"; 
-	},
-    
-	userRejectedSurveyEvent: function(id) {
-    
-    	console.log("Pollfish User Rejected Survey");
-    
-    	document.getElementById('logger').innerHTML = "User Rejected Survey"; 
-	},
-    
-	pollfishPanelClosedEvent: function(id) {
-    
-    	console.log("Pollfish Panel Closed");
-    
-    	document.getElementById('logger').innerHTML = "Panel Closed"; 
-    
+		pollfishplugin.initWithUserAttributes(
+			releaseMode, 
+			rewardMode,
+			apiKey, 
+			position, 
+			padding, 
+			requestUUID, 
+			offerwallMode, 
+			userAttributes);
 	},
 	
     // Update DOM on a Received Event
