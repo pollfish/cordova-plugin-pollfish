@@ -7,5 +7,7 @@
 - (void) show:(CDVInvokedUrlCommand*)command;
 - (void) hide:(CDVInvokedUrlCommand*)command;
 - (void) setEventCallback:(CDVInvokedUrlCommand*)command;
+- (void) isPollfishPresent:(CDVInvokedUrlCommand*)command;
+- (void) isPollfishPanelOpen:(CDVInvokedUrlCommand*)command;
 
 @end
