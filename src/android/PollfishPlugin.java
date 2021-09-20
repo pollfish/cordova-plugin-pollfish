@@ -117,8 +117,8 @@ public class PollfishPlugin extends CordovaPlugin {
                         String value = ((JSONObject) userPropertiesObject).getString(key);
 
                         userPropertiesBuiler.customAttribute(key, value);
-                    } catch (JSONException e) {
-                        Log.e(TAG, "Exception while iterating in map dictionary: " + e);
+                    } catch (JSONException exception) {
+                        Log.e(TAG, "Exception while iterating in map dictionary: " + exception);
                     }
                 }
 
@@ -133,7 +133,7 @@ public class PollfishPlugin extends CordovaPlugin {
 
                     paramsBuilder.rewardInfo(rewardInfo);
                 } catch (Exception exception) {
-                    Log.e(TAG, "Exception while accessing reward info: " + e);
+                    Log.e(TAG, "Exception while accessing reward info: " + exception);
                 }
                 
             }
@@ -326,7 +326,7 @@ public class PollfishPlugin extends CordovaPlugin {
                 jsonObject.put("remaining_completes", surveyInfo.getRemainingCompletes());
             }
         } catch (JSONException exception) {
-            Log.e(TAG, "Exception while accessing survey info: " + e);
+            Log.e(TAG, "Exception while accessing survey info: " + exception);
         }
 
         return jsonObject;
