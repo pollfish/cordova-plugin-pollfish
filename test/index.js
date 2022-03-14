@@ -1,24 +1,27 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
-
 var pollfishParams;
- 
+
+const releaseMode = false;
+const rewardMode = false;
+const offerwallMode = true; 
+const androidApiKey = 'ANDROID_API_KEY';
+const iOSApiKey = 'IOS_API_KEY'
+const requestUUID = 'REQUEST_UUID';
+const clickId = "CLICK_ID";
+const padding = 50;
+const userProperties = {
+	'gender': '1',
+	'education': '1'
+};
+
+// If rewardInfo is set, you will have to calculate the signature in order to receive surveys.
+// For more info regarding signature calculation please read the following guide
+// TODO: Add link
+const rewardInfo = {
+	rewardName: "Points",
+	rewardConversion: 1.3
+};
+const signature = "SIGNATURE";
+
 var app = {
 
     initialize: function() {
@@ -79,42 +82,24 @@ var app = {
 			document.getElementById('logger').innerHTML = 'Panel closed';
 			console.log("Pollfish Survey panel is closed");
 		});
-        
-		var releaseMode = false;
-		var rewardMode = false;
-		var androidApiKey = 'ANDROID_API_KEY';
-		var iOSApiKey = 'IOS_API_KEY'
-		var position = pollfish.Position.TOP_LEFT;
-		var requestUUID = 'REQUEST_UUID';
-		var padding = 50; 
-		var offerwallMode = true; 
-		var userProperties = {
-			'gender': '1',
-			'education': '1'
-		};
-		var clickId = "CLICK_ID";
-		var signature = "SIG";
-		var rewardInfo = {
-			rewardName: "Points",
-			rewardConversion: 1.3
-		};
 
 		// Create the Params configuration object
 		
 		var builder = new pollfish.Builder(androidApiKey, iOSApiKey);
 
-		params.rewardMode(rewardMode);
-		params.offerwallMode(offerwallMode);
-		params.indicatorPadding(padding);
-		params.indicatorPosition(position);
-		params.requestUUID(requestUUID);
-		params.releaseMode(releaseMode);
-		params.userProperties(userProperties);
-		params.rewardInfo(rewardInfo);
-		params.clickId(clickId);
-		params.signature(signature);
+		pollfishParams = builder.rewardMode(rewardMode)
+			.offerwallMode(offerwallMode)
+			.indicatorPadding(padding)
+			.indicatorPosition(pollfish.Position.TOP_LEFT)
+			.requestUUID(requestUUID)
+			.releaseMode(releaseMode)
+			.userProperties(userProperties)
+			.rewardInfo(rewardInfo)
+			.clickId(clickId)
+			.signature(signature)
+			.build();
 
-		pollfishParams = builder.build()
+		// Initialize Pollfish
 
 		pollfish.init(pollfishParams);
     },
