@@ -53,25 +53,10 @@ cordova plugin remove cordova-plugin-pollfish
 
 # Initialization
 
+## 1. Create `pollfish.Builder` instance
+
 The Pollfish plugin must be initialized with one or two api keys depending on which platforms are you targeting. You can retrieve an API key from Pollfish Dashboard when you [sign up](https://www.pollfish.com/signup/publisher) and create a new app.
 
-You can set several params to control the behaviour of Pollfish survey panel within your app with the use of the `pollfish.Builder` instance. Below you can see all the available options. Apart from the constructor all the other methods are optional.
-
-Param               | Description
---------------------|:---------
-**`constructor(String, String)`**           		| Sets Your Android and iOS API Keys (from step 2)
-**`.indicatorPosition(pollfish.Position)`**	| Sets the Position where you wish to place the Pollfish indicator. There are six different options RNPollfish.Position.{topLeft, topRight, middleLeft, middleRight, bottomLeft, bottom Right}: 
-**`.indicatorPadding(Int)`**                		| Sets the padding from top or bottom depending on the position of the indicator specified before (if used in middle position, padding is calculated from the top).
-**`.offerwallMode(Boolean)`**	                	| Sets Pollfish to offerwall mode
-**`.releaseMode(Boolean)`**      	            	| Choose Debug or Release Mode
-**`.rewardMode(Boolean)`**           		        | Init in reward mode (skip Pollfish indicator to show a custom prompt)
-**`.requestUUID(String)`**               		    | Sets a unique id to identify a user and be passed through server-to-server callbacks
-**`.userProperties(Json)`**                  		| Send attributes that you receive from your app regarding a user, in order to receive a better fill rate and higher priced surveys. You can see a detailed list of the user attributes you can pass with their keys at the following [link](https://www.pollfish.com/docs/demographic-surveys)
-**`.rewardInfo(Json)`**                     	 	| An object holding information regarding the survey completion reward. If set `signature` must be calculated in order to receive surveys. See [here](https://www.pollfish.com/docs/api-documentation) in section **`Notes for sig query parameter`**
-**`.clickId`**         		                      	| A pass throught param that will be passed back through server-to-server callback
-**`.signature`**            	                 	| An optional parameter used to secure the `rewardConversion` and `rewardName` parameters passed on `rewardInfo` `Json` object. 
-
-<br/>
 
 ```js
 var builder = new pollfish.Builder('ANDROID_API_KEY', 'IOS_API_KEY'); // Android & iOS
@@ -85,8 +70,31 @@ var builder = new pollfish.Builder('ANDROID_API_KEY', null); // Android only
 var builder = new pollfish.Builder(null, 'IOS_API_KEY'); // iOS only
 ```
 
+### 1.1 Configure Pollfish behaviour (Optional)
+
+You can set several params to control the behaviour of Pollfish survey panel within your app with the use of the `pollfish.Builder` instance. Below you can see all the available options. Apart from the constructor all the other methods are optional.
+
+Param               | Description
+--------------------|:---------
+**`constructor(String, String)`**           		| Sets Your Android and iOS API Keys (from step 2)
+**`.indicatorPosition(pollfish.Position)`**	| Sets the Position where you wish to place the Pollfish indicator. There are six different options RNPollfish.Position.{topLeft, topRight, middleLeft, middleRight, bottomLeft, bottom Right}: 
+**`.indicatorPadding(Int)`**                		| Sets the padding from top or bottom depending on the position of the indicator specified before (if used in middle position, padding is calculated from the top).
+**`.offerwallMode(Boolean)`**	                	| Sets Pollfish to offerwall mode
+**`.releaseMode(Boolean)`**      	            	| Choose Debug or Release Mode
+**`.rewardMode(Boolean)`**           		        | Init in reward mode (skip Pollfish indicator to show a custom prompt)
+**`.requestUUID(String)`**               		    | Sets a unique id to identify a user and be passed through server-to-server callbacks
+**`.userProperties(Json)`**                  		| Send attributes that you receive from your app regarding a user, in order to receive a better fill rate and higher priced surveys. You can see a detailed list of the user attributes you can pass with their keys at the following [link](https://www.pollfish.com/docs/demographic-surveys)
+**`.rewardInfo(Json)`**                     	 	| An object holding information regarding the survey completion reward. If set, `signature` must be calculated in order to receive surveys. See [here](https://www.pollfish.com/docs/api-documentation) in section **`Notes for sig query parameter`**
+**`.clickId`**         		                      	| A pass throught param that will be passed back through server-to-server callback
+**`.signature`**            	                 	| An optional parameter used to secure the `rewardConversion` and `rewardName` parameters passed on `rewardInfo` `Json` object. 
+
+<br/>
+
+Example of Pollfish configuration using the available options
+
+
 ```js
-var params = builder.rewardMode(false)
+var builder = builder.rewardMode(false)
 	.offerwallMode(false)
 	.releaseMode(false)
 	.indicatorPadding(50)
@@ -110,22 +118,35 @@ pollfish.init(params);
 
 <br/>
 
-### Debug Vs Release Mode
-
-You can use Pollfish either in Debug or in Release mode. 
-  
-* **Debug mode** is used to show to the developer how Pollfish will be shown through an app (useful during development and testing).
-* **Release mode** is the mode to be used for a released app (start receiving paid surveys).
-
-> **Note:** In Android debugMode parameter is ignored. Your app turns into debug mode once it is signed with a debug key. If you sign your app with a release key it automatically turns into Release mode.
-
-> **Note:** Be careful to turn the `releaseMode` parameter to `true` when you release your app in a relevant app store!!
+> ### Debug vs Release Mode
+>
+> You can use Pollfish either in Debug or in Release mode. 
+>  
+> * **Debug mode** is used to show to the developer how Pollfish will be shown through an app (useful during development and testing).
+> * **Release mode** is the mode to be used for a released app (start receiving paid surveys).
+> 
+> **Note:** Be careful to set the `releaseMode` parameter to `true` when you release your app in a relevant app store!!
 
 <br/>
 
-### Reward Mode 
+> ### Reward Mode 
+> 
+> Setting the `rewardMode` to `false` during initialization enables controlling the behavior of Pollfish in an app from the Pollfish panel. Enabling reward mode ignores Pollfish behavior from Pollfish panel. It always skips showing Pollfish indicator (small button) and always force open Pollfish view to app users. This method is usually used when app developers want to somehow incentivize their users before completing surveys to increase completion rates.
 
-Reward mode false during initialization enables controlling the behavior of Pollfish in an app from Pollfish panel. Enabling reward mode ignores Pollfish behavior from Pollfish panel. It always skips showing Pollfish indicator (small button) and always force open Pollfish view to app users. This method is usually used when app developers want to incentivize first somehow their users before completing surveys to increase completion rates.
+<br/>
+
+## 3. Initialize Pollfish
+
+Last but not least. Build the `Params` object by invoking `.build()` on the `pollfish.Builder` instance that you've configured earlier and call `RNPollfish.init(params)` passing the `Params` object as an argument.
+
+```js
+var params = builder.build();
+pollfish.init(params);
+
+// OR
+
+pollfish.init(builder.build());
+```
 
 <br/>
 

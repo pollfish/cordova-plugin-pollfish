@@ -1,27 +1,5 @@
 var pollfishParams;
 
-const releaseMode = false;
-const rewardMode = false;
-const offerwallMode = true; 
-const androidApiKey = 'ANDROID_API_KEY';
-const iOSApiKey = 'IOS_API_KEY'
-const requestUUID = 'REQUEST_UUID';
-const clickId = "CLICK_ID";
-const padding = 50;
-const userProperties = {
-	'gender': '1',
-	'education': '1'
-};
-
-// If rewardInfo is set, you will have to calculate the signature in order to receive surveys.
-// For more info regarding signature calculation please read the following guide
-// TODO: Add link
-const rewardInfo = {
-	rewardName: "Points",
-	rewardConversion: 1.3
-};
-const signature = "SIGNATURE";
-
 var app = {
 
     initialize: function() {
@@ -85,22 +63,13 @@ var app = {
 
 		// Create the Params configuration object
 		
-		var builder = new pollfish.Builder(androidApiKey, iOSApiKey);
+		var builder = new pollfish.Builder('ANDROID_API_KEY', 'IOS_API_KEY');
 
-		pollfishParams = builder.rewardMode(rewardMode)
-			.offerwallMode(offerwallMode)
-			.indicatorPadding(padding)
+		pollfishParams = builder
 			.indicatorPosition(pollfish.Position.TOP_LEFT)
-			.requestUUID(requestUUID)
-			.releaseMode(releaseMode)
-			.userProperties(userProperties)
-			.rewardInfo(rewardInfo)
-			.clickId(clickId)
-			.signature(signature)
 			.build();
 
 		// Initialize Pollfish
-
 		pollfish.init(pollfishParams);
     },
     
