@@ -59,15 +59,18 @@ The Pollfish plugin must be initialized with one or two api keys depending on wh
 
 
 ```js
-var builder = new pollfish.Builder('ANDROID_API_KEY', 'IOS_API_KEY'); // Android & iOS
+var builder = new pollfish.Builder('ANDROID_API_KEY', 'IOS_API_KEY')
+	.rewardMode(true); // Android & iOS
 ```
 
 ```js
-var builder = new pollfish.Builder('ANDROID_API_KEY', null); // Android only
+var builder = new pollfish.Builder('ANDROID_API_KEY', null)
+	.rewardMode(true); // Android only
 ```
 
 ```js
-var builder = new pollfish.Builder(null, 'IOS_API_KEY'); // iOS only
+var builder = new pollfish.Builder(null, 'IOS_API_KEY')
+	.rewardMode(true); // iOS only
 ```
 
 ### 1.1 Configure Pollfish behaviour (Optional)
@@ -94,7 +97,7 @@ Example of Pollfish configuration using the available options
 
 
 ```js
-var builder = builder.rewardMode(false)
+var builder = builder
 	.offerwallMode(false)
 	.releaseMode(false)
 	.indicatorPadding(50)
@@ -155,18 +158,6 @@ pollfish.init(builder.build());
 In this section we will list several options that can be used to control Pollfish surveys behaviour, how to listen to several notifications or how be eligible to more targeted (high-paid) surveys. All these steps are optional.
 
 <br/>
-
-## Handle application entering to foreground
-
-You should handle the event when your app is entering to foreground in order to initialise Pollfish again by listening to the relevant event.
-
-For example:
-
-```js
-document.addEventListener("resume", () => {
-	pollfish.init(pollfishParams); 
-}, false);
-```
 
 ## Get notified when a Pollfish survey is received
 

@@ -11,44 +11,40 @@ var app = {
     },
 
 	onDeviceReady: function() {
-       
-        app.receivedEvent('deviceready'); 
-
-		document.addEventListener("resume", app.onResume, false);
-        		
         document.getElementById('show').addEventListener('click', function() {                                              
 			pollfish.show();
 		}, false);
         
-        document.getElementById('hide').addEventListener('click', function() {               
-        	pollfish.hide();                 
-		}, false);
-  	
         // Subscribe to Pollfish events
 		
         pollfish.setEventCallback(pollfish.EventListener.OnPollfishSurveyReceived, (result) => {
 			document.getElementById('logger').innerHTML = 'Survey received: ' + JSON.stringify(result);
 			console.log("Survey Received: " + JSON.stringify(result));
+			document.getElementById('show').style.display = 'block';
 		});
 
         pollfish.setEventCallback(pollfish.EventListener.OnPollfishSurveyCompleted, (result) => {
 			document.getElementById('logger').innerHTML = 'Survey completed: ' + JSON.stringify(result);
 			console.log("Survey Completed: " + JSON.stringify(result));
+			document.getElementById('show').style.display = 'none';
 		});
 
         pollfish.setEventCallback(pollfish.EventListener.OnPollfishSurveyNotAvailable, (_) => {
 			document.getElementById('logger').innerHTML = 'Survey not available';
 			console.log("Pollfish Survey not available");
+			document.getElementById('show').style.display = 'none';
 		});
 
         pollfish.setEventCallback(pollfish.EventListener.OnPollfishUserNotEligible, (_) => {
 			document.getElementById('logger').innerHTML = 'User not eligible' + JSON.stringify(result);
 			console.log("Pollfish User Not Eligible");
+			document.getElementById('show').style.display = 'none';
 		});
 
         pollfish.setEventCallback(pollfish.EventListener.OnPollfishUserRejectedSurvey, (_) => {
 			document.getElementById('logger').innerHTML = 'User rejected survey';
 			console.log("Pollfish User Rejected Survey");
+			document.getElementById('show').style.display = 'none';
 		});
 
         pollfish.setEventCallback(pollfish.EventListener.OnPollfishOpened, (_) => {
@@ -67,26 +63,16 @@ var app = {
 
 		pollfishParams = builder
 			.indicatorPosition(pollfish.Position.TOP_LEFT)
+			.rewardMode(true)
 			.build();
 
 		// Initialize Pollfish
 		pollfish.init(pollfishParams);
+
+		document.getElementById('logger').innerHTML = 'Pollfish initialized';
+		console.log("Pollfish initialized");
     },
-    
-	onResume: function () {
-		pollfish.init(pollfishParams);
-	},
-	
-    receivedEvent: function(id) {
-        var parentElement = document.getElementById(id);
-        var listeningElement = parentElement.querySelector('.listening');
-        var receivedElement = parentElement.querySelector('.received');
 
-        listeningElement.setAttribute('style', 'display:none;');
-        receivedElement.setAttribute('style', 'display:block;');
-
-        console.log('Received Event: ' + id);
-    }
 };
 
 app.initialize();
