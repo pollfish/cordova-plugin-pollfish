@@ -290,6 +290,28 @@ pollfish.isPollfishPanelOpen((result) => {
 
 <br/>
 
+# Migrate to v2.x.x
+
+Pollfish Cordova Plugin v2 introduces a new package name and different API with added customization options during initialization. If you have already integrated Pollfish Cordova Plugin < v2 in you app, please
+
+**1. Remove the old deprecated package name**
+
+```bash
+cordova plugin remove com.pollfish.cordova_plugin
+```
+
+**2. Add the new package name**
+
+```bash
+cordova plugin add cordova-plugin-pollfish
+```
+
+**3. Read the migration guide**
+
+For a detailed guide on how to migrate from Pollfish Cordova Plugin v1.x.x to v2.x.x please click [here](https://www.pollfish.com/docs/cordova)
+
+<br/>
+
 # More info
 
 You can read more info on how the Native Pollfish SDKs work on Android and iOS or how to set up properly a Cordova environment at the following links:
