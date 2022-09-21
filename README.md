@@ -11,7 +11,7 @@ Pollfish Cordova Plugin can be found on [npm Registry](https://www.npmjs.com/pac
 # Prerequisites
 
 * Android SDK 21 or higher using Google Play Services
-* iOS 9.0 or higher
+* iOS 11.0 or higher
 * Apache Cordova v3.0.0 or higher
 * CocoaPods v1.10.0 or higher
 
@@ -89,6 +89,7 @@ Param               | Description
 **`.userProperties(Json)`**                  		| Send attributes that you receive from your app regarding a user, in order to receive a better fill rate and higher priced surveys. You can see a detailed list of the user attributes you can pass with their keys at the following [link](https://www.pollfish.com/docs/demographic-surveys)
 **`.rewardInfo(Json)`**                     	 	| An object holding information regarding the survey completion reward. If set, `signature` must be calculated in order to receive surveys. See [here](https://www.pollfish.com/docs/api-documentation) in section **`Notes for sig query parameter`**
 **`.clickId`**         		                      	| A pass throught param that will be passed back through server-to-server callback
+**`.userId`**										| A unique id to identify a user
 **`.signature`**            	                 	| An optional parameter used to secure the `rewardConversion` and `rewardName` parameters passed on `rewardInfo` `Json` object. 
 
 <br/>
@@ -109,6 +110,7 @@ var builder = builder
 		...
 	})
 	.clickId('CLICK_ID')
+	.userId('USER_ID')
 	.signature('SIGNATURE')
 	.rewardInfo({
 		rewardName: 'Points',
@@ -135,6 +137,14 @@ pollfish.init(params);
 > ### Reward Mode 
 > 
 > Setting the `rewardMode` to `false` during initialization enables controlling the behavior of Pollfish in an app from the Pollfish panel. Enabling reward mode ignores Pollfish behavior from Pollfish panel. It always skips showing Pollfish indicator (small button) and always force open Pollfish view to app users. This method is usually used when app developers want to somehow incentivize their users before completing surveys to increase completion rates.
+
+<br/>
+
+> ### User ID
+>
+> Setting the `userId` will override the default behaviour and use that instead of the Advertising Id, of the corresponding platform, in order to identify a user
+>
+> <span style="color: red">You can pass the id of a user as identified on your system. Pollfish will use this id to identify the user across sessions instead of an ad id/idfa as advised by the stores. You are solely responsible for aligning with store regulations by providing this id and getting relevant consent by the user when necessary. Pollfish takes no responsibility for the usage of this id. In any request from your users on resetting/deleting this id and/or profile created, you should be solely liable for those requests.</span>
 
 <br/>
 

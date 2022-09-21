@@ -24,8 +24,9 @@ static NSString* onPollfishClosed = nil;
     NSString* requestUUID = [[command arguments] objectAtIndex:7];
     NSMutableDictionary *userAttributesDict = [[command arguments] objectAtIndex:8];
     NSString* clickId = [[command arguments] objectAtIndex:9];
-    NSString* signature = [[command arguments] objectAtIndex:10];
-    NSMutableDictionary *rewardInfoDict = [[command arguments] objectAtIndex:11];
+    NSString* userId = [[command arguments] objectAtIndex:10];
+    NSString* signature = [[command arguments] objectAtIndex:11];
+    NSMutableDictionary *rewardInfoDict = [[command arguments] objectAtIndex:12];
 
     if (apiKey == [NSNull null]) {
         initialized = NO;
@@ -46,6 +47,10 @@ static NSString* onPollfishClosed = nil;
 
     if (clickId != [NSNull null]) {
         [pollfishParams clickId:clickId];
+    }
+
+    if (userId != [NSNull null]) {
+        [pollfishParams userId:userId];
     }
 
     if (signature != [NSNull null]) {

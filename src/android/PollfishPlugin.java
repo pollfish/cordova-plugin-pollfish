@@ -79,8 +79,9 @@ public class PollfishPlugin extends CordovaPlugin {
             final String requestUUID = pollfishParams.getString(7);
             final Object userPropertiesObject = pollfishParams.get(8);
             final String clickId = pollfishParams.getString(9);
-            final String signature = pollfishParams.getString(10);
-            final Object rewardInfoObject = pollfishParams.get(11);
+            final String userId = pollfishParams.getString(10);
+            final String signature = pollfishParams.getString(11);
+            final Object rewardInfoObject = pollfishParams.get(12);
 
             if (apiKey == null || apiKey.equals("null")) {
                 initialized = false;
@@ -95,15 +96,19 @@ public class PollfishPlugin extends CordovaPlugin {
                     .offerwallMode(offerwallMode)
                     .platform(Platform.CORDOVA);
 
-            if (requestUUID != null && !requestUUID.equals("null")) {
+            if (requestUUID != null && !requestUUID.isEmpty() && !requestUUID.equals("null")) {
                 paramsBuilder.requestUUID(requestUUID);
             }
 
-            if (clickId != null && !clickId.equals("null")) {
+            if (clickId != null && !clickId.isEmpty() && !clickId.equals("null")) {
                 paramsBuilder.clickId(clickId);
             }
 
-            if (signature != null && !signature.equals("null")) {
+            if (userId != null && !userId.isEmpty() && !userId.equals("null")) {
+                paramsBuilder.userId(userId);
+            }
+
+            if (signature != null && !signature.isEmpty() && !signature.equals("null")) {
                 paramsBuilder.signature(signature);
             }
 
