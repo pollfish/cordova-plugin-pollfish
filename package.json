@@ -1,5 +1,5 @@
 {
-    "version": "2.1.4",
+    "version": "2.1.5",
     "name": "cordova-plugin-pollfish",
     "cordova_name": "PollfishPlugin",
     "description": "Pollfish Cordova/PhoneGap plugin",
